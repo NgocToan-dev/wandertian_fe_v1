@@ -1,11 +1,15 @@
 <template>
   <div class="login">
-    <div class="flex justify-center items-center h-screen">
+    <div class="flex justify-center items-center h-screen dark:bg-gray-800">
       <!-- Create a form with email and password input fields with flowbite  -->
-      <form class="bg-white p-8 rounded-lg shadow-md w-96">
-        <h2 class="text-2xl font-bold mb-4 text-center">Login</h2>
+      <form class="bg-white dark:bg-gray-700 p-8 rounded-lg shadow-md w-96">
+        <h2 class="text-2xl font-bold mb-4 text-center dark:text-white">Login</h2>
         <div>
-          <fwb-input v-model="email" label="Email" placeholder="enter your email">
+          <fwb-input
+            v-model="email"
+            label="Email"
+            placeholder="enter your email"
+          >
           </fwb-input>
         </div>
         <div class="mt-4">
@@ -20,13 +24,13 @@
               <!-- icon -->
               <Icon
                 icon="mdi:eye"
-                class="cursor-pointer text-2xl"
+                class="cursor-pointer text-2xl dark:text-white"
                 v-if="showPassword"
                 @click="showPassword = !showPassword"
               />
               <Icon
                 icon="mdi:eye-off"
-                class="cursor-pointer text-2xl"
+                class="cursor-pointer text-2xl dark:text-white"
                 v-else
                 @click="showPassword = !showPassword"
               />
@@ -34,14 +38,18 @@
           </fwb-input>
         </div>
         <div class="mt-4">
-          <fwb-checkbox v-model="remember" label="Remember me" />
+          <fwb-checkbox v-model="remember" label="Remember me" class="dark:text-white" />
         </div>
         <div class="mt-4">
-          <fwb-button class="w-full" @click.prevent="login">Login</fwb-button>
+          <fwb-button
+            class="w-full"
+            @click.prevent="login"
+            >Login</fwb-button
+          >
         </div>
         <div class="mt-2 text-center">
           <!-- signup link -->
-          <p class="text-sm text-gray-500">
+          <p class="text-sm text-gray-500 dark:text-gray-400">
             Don't have an account?
             <fwb-a
               href="/signup"

@@ -10,7 +10,7 @@ const routes = [
   // redirect all not existing routes to login
   {
     path: "/:pathMatch(.*)*",
-    redirect: "/login",
+    component: () => import("@/views/pages/404.vue"),
   },
   ...authenticationRoutes,
   ...adminRoutes, 

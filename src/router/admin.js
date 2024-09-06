@@ -6,7 +6,14 @@ export const adminRoutes = [
     children: [
       {
         path: "task",
+        name: "task",
         component: () => import("@/views/admin/mainContent/task/TaskList.vue"),
+      },
+      {
+        path: "dashboard",
+        name: "dashboard",
+        component: () =>
+          import("@/views/admin/mainContent/dashboard/Dashboard.vue"),
       },
     ],
   },
