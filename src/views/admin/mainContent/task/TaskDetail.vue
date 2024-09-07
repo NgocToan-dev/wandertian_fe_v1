@@ -2,43 +2,82 @@
   <fwb-modal persistent>
     <template #header>
       <div class="flex items-center text-lg font-bold text-gray-800 dark:text-white">
-        Terms of Service
+        Task Details
       </div>
     </template>
     <template #body>
       <!-- product name, color, category, price, quantity, description, image -->
       <div class="flex flex-col gap-2">
         <div class="flex gap-4">
-          <FwbInput label="Product Name" class="flex-1" />
-          <fwb-select
-            :options="priority"
-            label="Priority"
+          <FwbInput
+            label="Title"
+            class="flex-1"
+            v-model="model.name"
+            @blur="validateField('name')"
+            @input="validateField('name')"
           >
-            <template #option="{ option }">
-              <div class="flex items-center gap-2">
-                <Icon :icon="option.icon" />
-                <span>{{ option.name }}</span>
-              </div>
+            <template #validationMessage>
+              <div v-if="errors.name" class="text-red-500">{{ errors.name }}</div>
             </template>
-          </fwb-select>
+          </FwbInput>
+          <fwb-select
+            :options="categories"
+            label="Select a category"
+            class="flex-1"
+            v-model="model.category"
+          />
+        </div>
+        <div class="flex justify-start gap-5">
+          <!-- priority radio -->
+          <div class="flex items-center gap-1">
+            <input
+              type="radio"
+              :value="3"
+              id="low"
+              name="priority"
+              v-model="model.priority"
+            />
+            <label for="low">
+              <Icon icon="mdi:flag" class="text-red-500 text-2xl" />
+            </label>
+          </div>
+          <div class="flex items-center gap-1">
+            <input
+              type="radio"
+              :value="2"
+              id="medium"
+              name="priority"
+              v-model="model.priority"
+            />
+            <label for="medium">
+              <Icon icon="mdi:flag" class="text-yellow-500 text-2xl" />
+            </label>
+          </div>
+          <div class="flex items-center gap-1">
+            <input
+              type="radio"
+              :value="1"
+              id="high"
+              name="priority"
+              v-model="model.priority"
+            />
+            <label for="high">
+              <Icon icon="mdi:flag" class="text-green-500 text-2xl" />
+            </label>
+          </div>
+        </div>
+        <div>
+          <FwbTextarea label="Description" class="w-full" v-model="model.description" />
         </div>
         <div class="flex gap-4">
-          <fwb-select :options="categories" label="Select a category" class="flex-1" />
-          <FwbInput label="Price" class="flex-1" />
-        </div>
-        <div class="flex gap-4">
-          <FwbInput label="Quantity" class="flex-1" />
-          <FwbInput label="Description" class="flex-1" />
-        </div>
-        <div class="flex gap-4">
-          <fwb-file-input v-model="file" label="Upload file" class="flex-1" />
+          <fwb-file-input v-model="model.file" label="Upload file" class="flex-1" />
         </div>
       </div>
     </template>
     <template #footer>
-      <div class="flex justify-between">
-        <fwb-button @click="closeModal" color="alternative"> Decline </fwb-button>
-        <fwb-button @click="closeModal" color="green"> I accept </fwb-button>
+      <div class="flex justify-end gap-2">
+        <fwb-button @click="closeModal" color="alternative"> Cancel </fwb-button>
+        <fwb-button @click="save"> Save </fwb-button>
       </div>
     </template>
   </fwb-modal>
@@ -46,19 +85,61 @@
 
 <script setup>
 import { Icon } from "@iconify/vue/dist/iconify.js";
-import { FwbModal, FwbButton, FwbInput, FwbFileInput, FwbSelect } from "flowbite-vue";
+import {
+  FwbModal,
+  FwbButton,
+  FwbInput,
+  FwbFileInput,
+  FwbSelect,
+  FwbTextarea,
+} from "flowbite-vue";
+import { reactive, ref } from "vue";
+const model = reactive({
+  file: null,
+  name: "",
+  priority: 1,
+  category: "",
+  price: 0,
+  quantity: 0,
+  description: "",
+});
 
 const emit = defineEmits(["close"]);
+
+const errors = ref({});
 
 const closeModal = () => {
   emit("close");
 };
 
-const priority = [
-  { value: "low", name: "Low", icon: "mdi:flag-triangle-down" },
-  { value: "medium", name: "Medium", icon: "mdi:flag-triangle-down" },
-  { value: "high", name: "High", icon: "mdi:flag-triangle-down" },
+const categories = [
+  { value: "web", name: "Web Development" },
+  { value: "mobile", name: "Mobile Development" },
+  { value: "design", name: "UI/UX Design" },
+  { value: "marketing", name: "Marketing" },
 ];
+
+const save = () => {
+  validateAllFields();
+  if (Object.values(errors.value).some((error) => error !== "")) {
+    return;
+  }
+  alert("Form is valid");
+};
+
+const validateField = (fieldName) => {
+  if (fieldName === "name" && !model.name.trim()) {
+    errors.value.name = "Product name is required";
+  } else {
+    errors.value.name = "";
+  }
+  // Add more validation rules for other fields as needed
+};
+
+const validateAllFields = () => {
+  validateField("name");
+  // Add validation calls for other fields
+};
 </script>
 
 <style lang="scss" scoped></style>

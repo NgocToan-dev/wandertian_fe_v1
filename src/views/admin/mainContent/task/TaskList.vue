@@ -6,7 +6,7 @@
       >
     </div>
     <div class="task-list mt-2">
-      <GridViewer />
+      <GridViewer :data="items" :columns="columns" :total-records="totalRecords" />
     </div>
   </div>
   <TaskDetail v-if="isShowTaskDetail" @close="closeTaskDetail" />
@@ -27,6 +27,26 @@ const showTaskDetail = () => {
 const closeTaskDetail = () => {
   isShowTaskDetail.value = false;
 };
+
+const items = ref([
+  {
+    id: 1,
+    name: "Task 1",
+    description: "Description 1",
+  },
+]);
+
+const columns = ref([
+  {
+    name: "Name",
+    key: "name",
+  },
+  {
+    name: "Description",
+    key: "description",
+  },
+]);
+const totalRecords = ref(1);
 </script>
 
 <style lang="scss"></style>

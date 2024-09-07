@@ -6,42 +6,14 @@
     <div class="flex gap-2">
       <!-- Switch dark mode -->
       <div class="flex items-center gap-2">
-        <FwbToggle v-model="darkMode" :class="darkMode ? 'dark-mode' : 'light-mode'" />
+        <ToggleDarkMode />
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { FwbToggle } from "flowbite-vue";
-import { toggleDarkMode } from "@/utilities/commonFn";
-import { ref, watch } from "vue";
-
-const darkMode = ref(localStorage.getItem("darkMode") === "true");
-watch(darkMode, (newVal) => {
-  toggleDarkMode(newVal);
-});
+import ToggleDarkMode from "@/components/button/ToggleDarkMode.vue";
 </script>
 
-<style lang="scss">
-.after\:border::after {
-  border-width: 0px !important;
-}
-.peer:checked ~ .peer-checked\:bg-blue-600 {
-  background-color: #000 !important;
-}
-.dark-mode {
-  span {
-    &::after {
-      background: url("@/assets/icon/moon.svg") no-repeat center center #000;
-    }
-  }
-}
-.light-mode {
-  span {
-    &::after {
-      background: url("@/assets/icon/sun.svg") no-repeat center center;
-    }
-  }
-}
-</style>
+<style lang="scss"></style>

@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 import { authenticationRoutes } from "./authentication";
 import { adminRoutes } from "./admin";
+import { blogRoutes } from "./blog";
 
 const routes = [
   {
@@ -13,7 +14,8 @@ const routes = [
     component: () => import("@/views/pages/404.vue"),
   },
   ...authenticationRoutes,
-  ...adminRoutes, 
+  ...adminRoutes,
+  ...blogRoutes,
 ];
 
 const router = createRouter({
