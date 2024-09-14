@@ -1,31 +1,36 @@
 <template>
   <!-- homepage of blog main content -->
-  <div class="container mx-auto my-5">
+  <div class="container mx-auto p-4">
     <div class="grid grid-cols-12">
-      <div class="col-span-8 flex flex-col gap-5">
+      <div class="col-span-9 flex flex-col gap-5">
         <!-- main content -->
         <fwb-card
-          :img-src="news.img"
           variant="horizontal"
           v-for="(news, index) in listNews"
           :key="index"
-          class="w-full max-h-[200px] overflow-hidden"
+          @click.prevent="goToDetail(news.id)"
         >
-          <div class="p-5">
-            <h5
-              class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white"
-            >
-              {{ news.title }}
-            </h5>
-            <p class="font-normal text-gray-700 dark:text-gray-400">
-              {{ news.description }}
-          </p>
+          <div class="flex">
+            <!-- image -->
+            <div class="w-1/3">
+              <img :src="news.img" alt="news" class="w-full h-full object-cover" />
+            </div>
+            <div class="flex-1 p-5">
+              <h5
+                class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white"
+              >
+                {{ news.title }}
+              </h5>
+              <p class="font-normal text-gray-700 dark:text-gray-400">
+                {{ news.description }}
+              </p>
+            </div>
           </div>
         </fwb-card>
       </div>
-      <div class="col-span-4 flex flex-col gap-5">
+      <div class="col-span-3 p-4 flex flex-col gap-5">
         <!-- sidebar -->
-        <fwb-card variant="image">
+        <fwb-card variant="image" class="max-w-screen-md">
           <!-- personal information -->
           <div class="p-5 flex flex-col items-center">
             <fwb-avatar :img="author.img" rounded size="lg" />
@@ -45,6 +50,7 @@
               v-model="searchNewsText"
               placeholder="enter your news title"
               size="lg"
+              @keyup.enter="searchNews"
             >
               <template #prefix>
                 <svg
@@ -77,21 +83,27 @@
 <script setup>
 import { FwbCard, FwbAvatar, FwbInput, FwbButton } from "flowbite-vue";
 import { ref } from "vue";
+import { useRouter } from "vue-router";
+
+const router = useRouter();
 
 const listNews = ref([
   {
+    id: 1,
     title: "Noteworthy technology acquisitions 2021",
     description:
       "Here are the biggest enterprise technology acquisitions of 2021 so far, in reverse chronological order.",
     img: "https://flowbite.com/docs/images/blog/image-4.jpg",
   },
   {
+    id: 2,
     title: "Noteworthy technology acquisitions 2021",
     description:
       "Here are the biggest enterprise technology acquisitions of 2021 so far, in reverse chronological order.",
     img: "https://flowbite.com/docs/images/blog/image-2.jpg",
   },
   {
+    id: 3,
     title: "Noteworthy technology acquisitions 2021",
     description:
       "Here are the biggest enterprise technology acquisitions of 2021 so far, in reverse chronological order.",
@@ -103,6 +115,16 @@ const author = ref({
   img: "https://flowbite.com/docs/images/people/profile-picture-1.jpg",
   description: "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
 });
+
+const searchNewsText = ref("");
+
+const searchNews = () => {
+  console.log(searchNewsText.value);
+};
+
+const goToDetail = (id) => {
+  router.push(`/post/${id}`);
+};
 </script>
 
 <style lang="postcss" scoped></style>

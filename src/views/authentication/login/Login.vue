@@ -5,11 +5,7 @@
       <form class="bg-white dark:bg-gray-700 p-8 rounded-lg shadow-md w-96">
         <h2 class="text-2xl font-bold mb-4 text-center dark:text-white">Login</h2>
         <div>
-          <fwb-input
-            v-model="email"
-            label="Email"
-            placeholder="enter your email"
-          >
+          <fwb-input v-model="email" label="Email" placeholder="enter your email">
           </fwb-input>
         </div>
         <div class="mt-4">
@@ -41,11 +37,7 @@
           <fwb-checkbox v-model="remember" label="Remember me" class="dark:text-white" />
         </div>
         <div class="mt-4">
-          <fwb-button
-            class="w-full"
-            @click.prevent="login"
-            >Login</fwb-button
-          >
+          <fwb-button class="w-full" @click.prevent="login">Login</fwb-button>
         </div>
         <div class="mt-2 text-center">
           <!-- signup link -->
@@ -83,19 +75,27 @@ const password = ref("");
 const remember = ref(false);
 const showPassword = ref(false);
 const login = () => {
-  if (checkLogin(email.value, password.value)) {
-    alert("login success");
-    router.push("/admin");
+  const { isAdmin, error, message } = checkLogin(email.value, password.value);
+  if (!error) {
+    localStorage.setItem("isAuthenticated", true);
+    localStorage.setItem("user", isAdmin ? "admin" : "user");
+    if (isAdmin) {
+      router.push("/admin");
+    } else {
+      router.push("/homepage");
+    }
   } else {
-    alert("login failed");
+    alert(message);
   }
 };
 
 const checkLogin = (username, password) => {
   if (username === "admin" && password === "1") {
-    return true;
+    return { error: false, message: "Login success", isAdmin: true };
+  } else if (username === "user" && password === "1") {
+    return { error: false, message: "Login success", isAdmin: false };
   } else {
-    return false;
+    return { error: true, message: "Invalid username or password", isAdmin: false };
   }
 };
 </script>

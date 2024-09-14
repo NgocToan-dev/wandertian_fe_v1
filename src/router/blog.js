@@ -11,6 +11,10 @@ export const blogRoutes = [
         path: "study-with-me",
         component: () => import("@/views/blog/studyWithMe/StudyWithMe.vue"),
       },
+      {
+        path: "post/:id",
+        component: () => import("@/views/blog/post/PostDetail.vue"),
+      },
     ],
   },
 ];

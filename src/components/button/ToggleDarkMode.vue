@@ -3,13 +3,13 @@
 </template>
 
 <script setup>
-import { toggleDarkMode } from "@/utilities/commonFn";
+import commonFn from "@/utilities/commonFn";
 import { FwbToggle } from "flowbite-vue";
 import { ref, watch } from "vue";
 
 const darkMode = ref(localStorage.getItem("darkMode") === "true");
 watch(darkMode, (newVal) => {
-  toggleDarkMode(newVal);
+  commonFn.toggleDarkMode(newVal);
 });
 </script>
 

@@ -1,5 +1,5 @@
 <template>
-  <fwb-footer>
+  <fwb-footer class="border-t-2">
     <fwb-footer-copyright
       by="Wandertian"
       href="https://flowbite.com/"

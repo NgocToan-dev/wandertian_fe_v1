@@ -6,14 +6,14 @@
 
 <script setup>
 import { onMounted } from "vue";
-import { toggleDarkMode } from "@/utilities/commonFn";
+import commonFn from "@/utilities/commonFn";
 
 onMounted(() => {
   const darkMode = localStorage.getItem("darkMode");
   if (darkMode == "true") {
-    toggleDarkMode(true);
+    commonFn.toggleDarkMode(true);
   } else {
-    toggleDarkMode(false);
+    commonFn.toggleDarkMode(false);
   }
 });
 </script>

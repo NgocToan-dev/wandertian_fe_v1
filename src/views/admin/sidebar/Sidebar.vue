@@ -57,9 +57,11 @@ import {
 } from "flowbite-vue";
 import { Icon } from "@iconify/vue/dist/iconify.js";
 import SidebarItemType from "@/utilities/enum/SidebarItemType";
-import { computed } from "vue";
+import { computed, watch } from "vue";
+import { useSidebarTabStore } from "@/store/sidebarTabStore";
 
 const route = useRoute();
+const sidebarStore = useSidebarTabStore();
 
 const menus = [
   {
@@ -73,29 +75,32 @@ const menus = [
     icon: "mdi:format-list-numbered",
   },
   {
-    name: "Product",
-    icon: "mdi:format-list-numbered",
-    type: SidebarItemType.ItemDropdown,
-    children: [
-      {
-        name: "Product List",
-        link: "/admin/product",
-      },
-    ],
+    name: "Post",
+    link: "/admin/post",
+    icon: "mdi:file-document",
   },
   {
     type: SidebarItemType.Divider,
   },
   {
-    name: "User",
-    link: "/admin/user",
-    icon: "mdi:user",
+    name: "Settings",
+    link: "/admin/settings",
+    icon: "mdi:cog",
   },
 ];
 
 const isActiveRoute = computed(() => (path) => {
   return route.path === path || route.path.startsWith(path + "/");
 });
+
+watch(
+  route,
+  (newRoute) => {
+    const newTab = menus.find((menu) => newRoute.path == menu.link);
+    sidebarStore.setActiveTab(newTab.name);
+  },
+  { immediate: true }
+);
 </script>
 
 <style lang="postcss" scoped>

@@ -15,6 +15,12 @@ export const adminRoutes = [
         component: () =>
           import("@/views/admin/mainContent/dashboard/Dashboard.vue"),
       },
+      {
+        path: "post",
+        name: "post",
+        component: () =>
+          import("@/views/admin/mainContent/post/PostEditor.vue"),
+      },
     ],
   },
 ];
