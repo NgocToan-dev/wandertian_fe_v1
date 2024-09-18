@@ -67,16 +67,21 @@ import { ref } from "vue";
 import { FwbInput, FwbButton, FwbCheckbox, FwbA } from "flowbite-vue";
 import { Icon } from "@iconify/vue";
 import { useRouter } from "vue-router";
+import userApi from "../../../apis/userApi";
+import { useToast } from "vue-toastification";
 
+const toast = useToast();
 const router = useRouter();
 
 const email = ref("");
 const password = ref("");
 const remember = ref(false);
 const showPassword = ref(false);
-const login = () => {
-  const { isAdmin, error, message } = checkLogin(email.value, password.value);
-  if (!error) {
+const login = async () => {
+  const { isAdmin, success } = await checkLogin(email.value, password.value);
+  if (success) {
+    toast.success("Login successfully");
+
     localStorage.setItem("isAuthenticated", true);
     localStorage.setItem("user", isAdmin ? "admin" : "user");
     if (isAdmin) {
@@ -85,17 +90,22 @@ const login = () => {
       router.push("/homepage");
     }
   } else {
-    alert(message);
+    toast.error("Invalid username or password", {
+      position: "top-center",
+    });
   }
 };
 
-const checkLogin = (username, password) => {
-  if (username === "admin" && password === "1") {
-    return { error: false, message: "Login success", isAdmin: true };
-  } else if (username === "user" && password === "1") {
-    return { error: false, message: "Login success", isAdmin: false };
+const checkLogin = async (username, password) => {
+  const payload = {
+    username: username,
+    password: password,
+  };
+  const res = await userApi.checkLogin(payload);
+  if (res) {
+    return { isAdmin: res.isAdmin, success: true };
   } else {
-    return { error: true, message: "Invalid username or password", isAdmin: false };
+    return { isAdmin: false, success: false };
   }
 };
 </script>

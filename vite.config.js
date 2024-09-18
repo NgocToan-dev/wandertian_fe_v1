@@ -13,9 +13,11 @@ export default defineConfig({
   css: {
     preprocessorOptions: {
       scss: {
-        additionalData: [
-        ],
+        additionalData: [],
       },
     },
+  },
+  server: {
+    port: 1506, // Specify the port here
   },
 });
