@@ -82,7 +82,11 @@
 import { ref } from "vue";
 import { FwbInput, FwbButton, FwbA } from "flowbite-vue";
 import { Icon } from "@iconify/vue";
+import userApi from "@/apis/auth/userApi";
+import { useToast } from "vue-toastification";
+import router from "@/router";
 
+const toast = useToast();
 const name = ref("");
 const email = ref("");
 const password = ref("");
@@ -90,8 +94,36 @@ const confirmPassword = ref("");
 const showPassword = ref(false);
 const showConfirmPassword = ref(false);
 
-const signUp = () => {
-  console.log(name.value, email.value, password.value, confirmPassword.value);
+const signUp = async () => {
+  if (!validate()) {
+    return;
+  }
+  const payload = {
+    username: name.value,
+    email: email.value,
+    password: password.value,
+  };
+
+  try {
+    const res = await userApi.registerCode(payload);
+    if (res) {
+      router.push({
+        name: "VerifyCode",
+        query: { email: email.value, type: VerifyCodeFormType.SignUp },
+      });
+      toast.success("Your code is sent to your email");
+    }
+  } catch (error) {
+    toast.error("Sign up failed");
+  }
+};
+
+const validate = () => {
+  if (password.value !== confirmPassword.value) {
+    toast.error("Password and confirm password are not the same");
+    return false;
+  }
+  return true;
 };
 </script>
 

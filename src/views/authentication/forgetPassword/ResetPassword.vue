@@ -70,16 +70,47 @@
 
 <script setup>
 import { FwbButton, FwbInput, FwbA } from "flowbite-vue";
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 import { Icon } from "@iconify/vue";
+import { useToast } from "vue-toastification";
+import userApi from "@/apis/auth/userApi";
+import { useRoute, useRouter } from "vue-router";
 
+const router = useRouter();
+const route = useRoute();
+
+const toast = useToast();
+const email = ref("");
 const password = ref("");
 const confirmPassword = ref("");
 const showPassword = ref(false);
 const showConfirmPassword = ref(false);
 
-const changePassword = () => {
-  console.log(password.value, confirmPassword.value);
+onMounted(() => {
+  email.value = route.query.email;
+});
+const changePassword = async () => {
+  if(!validate()){
+    return;
+  }
+  // call api to change password
+  const payload = {
+    email: email.value,
+    newPassword: password.value,
+  };
+  const res = await userApi.resetPassword(payload);
+  if(res){
+    router.push("/login");
+    toast.success("Password changed successfully");
+  }
+};
+
+const validate = () => {
+  if (password.value !== confirmPassword.value) {
+    toast.error("Password does not match");
+    return false;
+  }
+  return true;
 };
 </script>
 

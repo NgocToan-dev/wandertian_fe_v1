@@ -2,10 +2,14 @@
   <div class="login">
     <div class="flex justify-center items-center h-screen dark:bg-gray-800">
       <!-- Create a form with email and password input fields with flowbite  -->
-      <form class="bg-white dark:bg-gray-700 p-8 rounded-lg shadow-md w-96">
+      <div class="bg-white dark:bg-gray-700 p-8 rounded-lg shadow-md w-96">
         <h2 class="text-2xl font-bold mb-4 text-center dark:text-white">Login</h2>
         <div>
-          <fwb-input v-model="email" label="Email" placeholder="enter your email">
+          <fwb-input
+            v-model="username"
+            label="Username"
+            placeholder="enter your username"
+          >
           </fwb-input>
         </div>
         <div class="mt-4">
@@ -37,7 +41,7 @@
           <fwb-checkbox v-model="remember" label="Remember me" class="dark:text-white" />
         </div>
         <div class="mt-4">
-          <fwb-button class="w-full" @click.prevent="login">Login</fwb-button>
+          <fwb-button class="w-full" @click="login">Login</fwb-button>
         </div>
         <div class="mt-2 text-center">
           <!-- signup link -->
@@ -57,55 +61,56 @@
             Forgot your password?
           </fwb-a>
         </div>
-      </form>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 import { FwbInput, FwbButton, FwbCheckbox, FwbA } from "flowbite-vue";
 import { Icon } from "@iconify/vue";
 import { useRouter } from "vue-router";
-import userApi from "../../../apis/userApi";
+import userApi from "@/apis/auth/userApi";
 import { useToast } from "vue-toastification";
+import commonFn from "@/utilities/commonFn";
+import RoleEnum from "@/utilities/enum/RoleEnum";
 
 const toast = useToast();
 const router = useRouter();
 
-const email = ref("");
+const username = ref("");
 const password = ref("");
 const remember = ref(false);
 const showPassword = ref(false);
-const login = async () => {
-  const { isAdmin, success } = await checkLogin(email.value, password.value);
-  if (success) {
-    toast.success("Login successfully");
 
-    localStorage.setItem("isAuthenticated", true);
-    localStorage.setItem("user", isAdmin ? "admin" : "user");
-    if (isAdmin) {
-      router.push("/admin");
-    } else {
-      router.push("/homepage");
+onMounted(() => {
+  // Add Key enter event listener to login
+  window.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+      login();
     }
-  } else {
-    toast.error("Invalid username or password", {
-      position: "top-center",
-    });
-  }
-};
+  });
+});
 
-const checkLogin = async (username, password) => {
+const login = async () => {
   const payload = {
-    username: username,
-    password: password,
+    username: username.value,
+    password: password.value,
   };
-  const res = await userApi.checkLogin(payload);
-  if (res) {
-    return { isAdmin: res.isAdmin, success: true };
-  } else {
-    return { isAdmin: false, success: false };
+  const res = await userApi.login(payload);
+  if (res && res.accessToken) {
+    // set accessToken to cookie and redirect to home
+    const accessToken = res.accessToken;
+    const expiredHours = res.expiresIn;
+    const role = commonFn.getRoleFromAccessToken(accessToken);
+
+    commonFn.setCookie("accessToken", accessToken, expiredHours || 48);
+    if (role == "Admin") {
+      commonFn.setCookie("role", RoleEnum.ADMIN, expiredHours || 48);
+    }
+    toast.success("Login successfully");
+    router.push("/");
   }
 };
 </script>

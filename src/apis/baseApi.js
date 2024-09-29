@@ -1,4 +1,3 @@
-import httpClient from "./httpClient";
 import httpConfig from "./httpConfig";
 class BaseApi {
   baseURL = "";

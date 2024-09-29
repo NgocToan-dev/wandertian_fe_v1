@@ -2,6 +2,8 @@ import { createRouter, createWebHistory } from "vue-router";
 import { authenticationRoutes } from "./authentication";
 import { adminRoutes } from "./admin";
 import { blogRoutes } from "./blog";
+import commonFn from "@/utilities/commonFn";
+import RoleEnum from "@/utilities/enum/RoleEnum";
 
 const routes = [
   // redirect all not existing routes to login
@@ -12,6 +14,9 @@ const routes = [
   {
     path: "/:pathMatch(.*)*",
     component: () => import("@/views/pages/404.vue"),
+  },
+  {
+    path: "/logout",
   },
   ...authenticationRoutes,
   ...adminRoutes,
@@ -24,13 +29,22 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  const isAuthenticated = localStorage.getItem("isAuthenticated");
-  const isAdmin = localStorage.getItem("user") === "admin";
-  if (to.path.startsWith("/admin") && !isAdmin && !isAuthenticated) {
-    next("/login");
-  } else {
-    next();
+  // everyone can go to only homepage
+  // But admin can only go to admin pages
+  // user login can only go to blog pages
+
+  const isLogin = commonFn.getCookie("accessToken");
+  const isAdmin = commonFn.getCookie("role") == RoleEnum.ADMIN;
+
+  // if logout call logout function
+  if (to.path === "/logout") {
+    commonFn.logout();
+    return next("/login");
   }
+  if(!isAdmin && to.path.includes("/admin")) {
+    return next("/404");
+  }
+  next();
 });
 
 export default router;

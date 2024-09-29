@@ -22,7 +22,7 @@
           </fwb-navbar-link>
           <ToggleDarkMode />
           <!-- login, logout button -->
-          <fwb-button v-if="!isAuthenticated" @click="login">Login</fwb-button>
+          <fwb-button v-if="!isLogin" @click="login">Login</fwb-button>
           <fwb-button v-else @click="logout">Logout</fwb-button>
         </div>
       </fwb-navbar-collapse>
@@ -42,13 +42,14 @@ import ToggleDarkMode from "@/components/button/ToggleDarkMode.vue";
 import { computed, onMounted, ref, watch } from "vue";
 import { useRouter } from "vue-router";
 import commonFn from "@/utilities/commonFn";
+import RoleEnum from "@/utilities/enum/RoleEnum";
 
-const isAuthenticated = computed(() => {
-  return localStorage.getItem("isAuthenticated");
+const isLogin = computed(() => {
+  return commonFn.getCookie("accessToken") != null;
 });
 
 const isAdmin = computed(() => {
-  return localStorage.getItem("user") === "admin";
+  return commonFn.getRoleInCookie() == RoleEnum.ADMIN;
 });
 
 const router = useRouter();
@@ -77,7 +78,7 @@ const headerLinks = computed(() => {
 });
 
 const logout = () => {
-  commonFn.logout(router);
+  router.push("/logout");
 };
 
 const login = () => {

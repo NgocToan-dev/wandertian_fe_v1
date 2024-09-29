@@ -1,3 +1,4 @@
 export default {
-  baseURL: 'http://localhost:5077',
+  authURL: 'https://localhost:7016',
+  businessURL: 'https://localhost:7171',
 }

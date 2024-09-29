@@ -1,19 +1,68 @@
-const commonFn = {
-  toggleDarkMode: (darkMode) => {
-    localStorage.setItem("darkMode", darkMode);
-    if (darkMode) {
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-    }
-  },
-
-  logout: (router) => {
-    debugger;
-    localStorage.removeItem("isAuthenticated");
-    localStorage.removeItem("user");
-    router.push("/login");
-  },
+const toggleDarkMode = (darkMode) => {
+  localStorage.setItem("darkMode", darkMode);
+  if (darkMode) {
+    document.documentElement.classList.add("dark");
+  } else {
+    document.documentElement.classList.remove("dark");
+  }
 };
 
-export default commonFn;
+const logout = () => {
+  deleteCookie("accessToken");
+  deleteCookie("role");
+};
+
+// Set cookie and secure cookie
+const setCookie = (name, value, hours) => {
+  let expires = "";
+  if (hours) {
+    let date = new Date();
+    date.setTime(date.getTime() + hours * 60 * 60 * 1000);
+    expires = "; expires=" + date.toUTCString();
+  }
+  document.cookie =
+    name + "=" + (value || "") + expires + "; path=/; SameSite=Strict; Secure";
+};
+
+const getCookie = (name) => {
+  const nameEQ = name + "=";
+  const ca = document.cookie.split(";");
+  for (let i = 0; i < ca.length; i++) {
+    let c = ca[i];
+    while (c.charAt(0) === " ") c = c.substring(1, c.length);
+    if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+  }
+  return null;
+};
+const deleteCookie = (name) => {
+  document.cookie = name + "=; Max-Age=-99999999;";
+};
+
+const getRoleFromAccessToken = (accessToken) => {
+  const base64Url = accessToken.split(".")[1];
+  const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+  const jsonPayload = decodeURIComponent(
+    atob(base64)
+      .split("")
+      .map(function (c) {
+        return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
+      })
+      .join("")
+  );
+  const payload = JSON.parse(jsonPayload);
+  return payload.Role;
+};
+
+const getRoleInCookie = () => {
+  return getCookie("role");
+};
+
+export default {
+  toggleDarkMode,
+  logout,
+  setCookie,
+  getCookie,
+  deleteCookie,
+  getRoleFromAccessToken,
+  getRoleInCookie,
+};

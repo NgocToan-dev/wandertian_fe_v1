@@ -10,15 +10,20 @@ export const authenticationRoutes = [
     component: () => import("@/views/authentication/signup/SignUp.vue"),
   },
   {
+    path: "/verify-code",
+    name: "VerifyCode",
+    component: () => import("@/views/authentication/signup/VerifyCode.vue"),
+  },
+  {
     path: "/forgot-password",
     name: "ForgotPassword",
     component: () =>
-      import("@/views/authentication/forgetPassword/ForgetPassword.vue"),
+      import("@/views/authentication/forgetPassword/ResetPassword.vue"),
   },
   {
-    path: "/change-password",
-    name: "ChangePassword",
+    path: "/reset-password",
+    name: "ResetPassword",
     component: () =>
-      import("@/views/authentication/forgetPassword/ChangePassword.vue"),
+      import("@/views/authentication/forgetPassword/ResetPassword.vue"),
   },
 ];
