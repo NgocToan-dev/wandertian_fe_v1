@@ -1,3 +1,5 @@
+import { useLoading } from "vue-loading-overlay";
+
 const toggleDarkMode = (darkMode) => {
   localStorage.setItem("darkMode", darkMode);
   if (darkMode) {
@@ -57,6 +59,17 @@ const getRoleInCookie = () => {
   return getCookie("role");
 };
 
+const showLoading = () => {
+  const $loading = useLoading({});
+  window.loader = $loading.show();
+};
+
+const hideLoading = () => {
+  if (window.loader) {
+    window.loader.hide();
+  }
+};
+
 export default {
   toggleDarkMode,
   logout,
@@ -65,4 +78,6 @@ export default {
   deleteCookie,
   getRoleFromAccessToken,
   getRoleInCookie,
+  showLoading,
+  hideLoading,
 };

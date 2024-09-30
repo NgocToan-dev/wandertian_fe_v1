@@ -1,7 +1,14 @@
 <template>
-  <div>
-    <froala tag="textarea" v-if="!readOnly" :config="config" v-model="model"> </froala>
-    <froalaView v-if="readOnly" :config="config" v-model="model" />
+  <div class="rich-editor">
+    <froala
+      class="remove-list-style"
+      tag="textarea"
+      v-if="!readOnly"
+      :config="config"
+      v-model:value="model"
+    >
+    </froala>
+    <froalaView v-if="readOnly" :config="config" v-model:value="model" />
   </div>
 </template>
 
@@ -36,10 +43,22 @@ const config = {
 </script>
 
 <style lang="scss">
-#fr-logo {
-  display: none;
-}
-.fr-quick-insert a.fr-floating-btn svg {
-  height: 40px !important;
+.rich-editor {
+  #fr-logo {
+    display: none;
+  }
+  .fr-quick-insert a.fr-floating-btn svg {
+    height: 40px !important;
+  }
+  .fr-wrapper {
+    max-height: 600px;
+    overflow: auto;
+  }
+  ol,
+  ul {
+    list-style-type: revert;
+    margin: revert;
+    padding: revert;
+  }
 }
 </style>

@@ -96,8 +96,10 @@ const isActiveRoute = computed(() => (path) => {
 watch(
   route,
   (newRoute) => {
-    const newTab = menus.find((menu) => newRoute.path == menu.link);
-    sidebarStore.setActiveTab(newTab.name);
+    const newTab = menus.find((menu) => newRoute.path.startsWith(menu.link));
+    if (newTab?.name) {
+      sidebarStore.setActiveTab(newTab.name);
+    }
   },
   { immediate: true }
 );

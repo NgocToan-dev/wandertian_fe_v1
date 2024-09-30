@@ -93,7 +93,12 @@ import {
   FwbSelect,
   FwbTextarea,
 } from "flowbite-vue";
-import { reactive, ref } from "vue";
+import { getCurrentInstance, reactive, ref } from "vue";
+import { useToast } from "vue-toastification";
+
+const { proxy } = getCurrentInstance();
+const toast = useToast();
+
 const model = reactive({
   file: null,
   name: "",

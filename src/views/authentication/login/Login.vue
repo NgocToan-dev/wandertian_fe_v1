@@ -94,23 +94,28 @@ onMounted(() => {
 });
 
 const login = async () => {
-  const payload = {
-    username: username.value,
-    password: password.value,
-  };
-  const res = await userApi.login(payload);
-  if (res && res.accessToken) {
-    // set accessToken to cookie and redirect to home
-    const accessToken = res.accessToken;
-    const expiredHours = res.expiresIn;
-    const role = commonFn.getRoleFromAccessToken(accessToken);
+  try {
+    commonFn.showLoading();
+    const payload = {
+      username: username.value,
+      password: password.value,
+    };
+    const res = await userApi.login(payload);
+    if (res && res.accessToken) {
+      // set accessToken to cookie and redirect to home
+      const accessToken = res.accessToken;
+      const expiredHours = res.expiresIn;
+      const role = commonFn.getRoleFromAccessToken(accessToken);
 
-    commonFn.setCookie("accessToken", accessToken, expiredHours || 48);
-    if (role == "Admin") {
-      commonFn.setCookie("role", RoleEnum.ADMIN, expiredHours || 48);
+      commonFn.setCookie("accessToken", accessToken, expiredHours || 48);
+      if (role == "Admin") {
+        commonFn.setCookie("role", RoleEnum.ADMIN, expiredHours || 48);
+      }
+      toast.success("Login successfully");
+      router.push("/");
     }
-    toast.success("Login successfully");
-    router.push("/");
+  } finally {
+    commonFn.hideLoading();
   }
 };
 </script>

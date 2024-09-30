@@ -5,7 +5,7 @@
         <fwb-table-head-cell v-for="(column, index) in columns" :key="index">
           {{ column.name }}
         </fwb-table-head-cell>
-        <fwb-table-head-cell>
+        <fwb-table-head-cell v-if="data.length > 0">
           <span class="sr-only">Edit</span>
         </fwb-table-head-cell>
       </fwb-table-head>
@@ -14,10 +14,10 @@
           <fwb-table-cell v-for="(column, index) in columns" :key="index">
             {{ item[column.key] }}
           </fwb-table-cell>
-          <fwb-table-cell class="w-10">
+          <fwb-table-cell class="w-10" v-if="data.length > 0">
             <div class="flex justify-center gap-2">
-              <Icon icon="mdi:pencil" class="cursor-pointer text-xl text-blue-500 dark:text-white" />
-              <Icon icon="mdi:delete" class="cursor-pointer text-xl text-red-500 dark:text-white" />
+              <Icon @click="editRow(item)" icon="mdi:pencil" class="cursor-pointer text-xl text-blue-500 dark:text-white" />
+              <Icon @click="deleteRow(item)" icon="mdi:delete" class="cursor-pointer text-xl text-red-500 dark:text-white" />
             </div>
           </fwb-table-cell>
         </fwb-table-row>
@@ -81,6 +81,16 @@ const currentPage = ref(1);
 const totalPages = computed(() => {
   return Math.ceil(props.totalRecords / 10);
 });
+
+const emits = defineEmits(["edit-row", "delete-row"]);
+
+const editRow = (record) => {
+  emits("edit-row", record);
+};
+
+const deleteRow = (record) => {
+  emits("delete-row", record);
+};
 
 const handlePageClick = (page) => {
   // get data from api

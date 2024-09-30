@@ -18,6 +18,11 @@ export const adminRoutes = [
       {
         path: "post",
         name: "post",
+        component: () => import("@/views/admin/mainContent/post/PostList.vue"),
+      },
+      {
+        path: "post/:id",
+        name: "postEditor",
         component: () =>
           import("@/views/admin/mainContent/post/PostEditor.vue"),
       },
