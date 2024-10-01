@@ -11,13 +11,25 @@
       </fwb-table-head>
       <fwb-table-body>
         <fwb-table-row v-for="(item, index) in data" :key="index">
-          <fwb-table-cell v-for="(column, index) in columns" :key="index">
-            {{ item[column.key] }}
+          <fwb-table-cell
+            class="limited-char-text"
+            v-for="(column, index) in columns"
+            :key="index"
+            v-html="item[column.key]"
+          >
           </fwb-table-cell>
           <fwb-table-cell class="w-10" v-if="data.length > 0">
             <div class="flex justify-center gap-2">
-              <Icon @click="editRow(item)" icon="mdi:pencil" class="cursor-pointer text-xl text-blue-500 dark:text-white" />
-              <Icon @click="deleteRow(item)" icon="mdi:delete" class="cursor-pointer text-xl text-red-500 dark:text-white" />
+              <Icon
+                @click="editRow(item)"
+                icon="mdi:pencil"
+                class="cursor-pointer text-xl text-blue-500 dark:text-white"
+              />
+              <Icon
+                @click="deleteRow(item)"
+                icon="mdi:delete"
+                class="cursor-pointer text-xl text-red-500 dark:text-white"
+              />
             </div>
           </fwb-table-cell>
         </fwb-table-row>
@@ -98,4 +110,11 @@ const handlePageClick = (page) => {
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.limited-char-text {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+</style>

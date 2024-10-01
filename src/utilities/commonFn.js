@@ -12,6 +12,8 @@ const toggleDarkMode = (darkMode) => {
 const logout = () => {
   deleteCookie("accessToken");
   deleteCookie("role");
+  localStorage.clear();
+  sessionStorage.clear();
 };
 
 // Set cookie and secure cookie
@@ -55,6 +57,19 @@ const getRoleFromAccessToken = (accessToken) => {
   return payload.Role;
 };
 
+const checkCookieExpired = (name) => {
+  const nameEQ = name + "=";
+  const ca = document.cookie.split(";");
+  for (let i = 0; i < ca.length; i++) {
+    let c = ca[i];
+    while (c.charAt(0) === " ") c = c.substring(1, c.length);
+    if (c.indexOf(nameEQ) === 0) {
+      return true;
+    }
+  }
+  return false;
+};
+
 const getRoleInCookie = () => {
   return getCookie("role");
 };
@@ -80,4 +95,5 @@ export default {
   getRoleInCookie,
   showLoading,
   hideLoading,
+  checkCookieExpired,
 };

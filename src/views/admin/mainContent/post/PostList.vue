@@ -24,6 +24,7 @@ import { onMounted, ref } from "vue";
 import router from "@/router";
 import postApi from "@/apis/business/postApi";
 import { useToast } from "vue-toastification";
+import commonFn from "@/utilities/commonFn";
 
 const toast = useToast();
 const items = ref([]);
@@ -60,14 +61,17 @@ const deletePost = async (item) => {
 };
 
 const refresh = async () => {
-  const res = await postApi.getAll();
-  if (res?.length > 0) {
-    items.value = res;
-    totalRecords.value = res.length;
+  try {
+    commonFn.showLoading();
+    const res = await postApi.getAll();
+    if (res?.length > 0) {
+      items.value = res;
+      totalRecords.value = res.length;
+    }
+  } finally {
+    commonFn.hideLoading();
   }
 };
-
-
 </script>
 
 <style lang="scss"></style>

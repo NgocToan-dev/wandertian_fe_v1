@@ -33,15 +33,18 @@ router.beforeEach((to, from, next) => {
   // But admin can only go to admin pages
   // user login can only go to blog pages
 
-  const isLogin = commonFn.getCookie("accessToken");
+  const isLogin = commonFn.checkCookieExpired("accessToken");
   const isAdmin = commonFn.getCookie("role") == RoleEnum.ADMIN;
 
+  if (to.path === "/login" && isLogin) {
+    return next("/homepage");
+  }
   // if logout call logout function
   if (to.path === "/logout") {
     commonFn.logout();
     return next("/login");
   }
-  if(!isAdmin && to.path.includes("/admin")) {
+  if (to.path.includes("/admin") && (!isLogin || !isAdmin)) {
     return next("/404");
   }
   next();

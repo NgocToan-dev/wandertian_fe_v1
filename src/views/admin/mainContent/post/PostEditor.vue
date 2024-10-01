@@ -29,10 +29,11 @@
 
 <script setup>
 import postApi from "@/apis/business/postApi";
+import commonFn from "@/utilities/commonFn";
 import EditMode from "@/utilities/enum/EditMode";
 import { Icon } from "@iconify/vue/dist/iconify.js";
 import { FwbButtonGroup, FwbButton, FwbInput } from "flowbite-vue";
-import { onMounted, reactive, ref } from "vue";
+import { onMounted, onUnmounted, reactive, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useToast } from "vue-toastification";
 const model = reactive({});
@@ -47,12 +48,31 @@ onMounted(async () => {
   const postID = route.params.id;
   if (postID != 0) {
     editMode.value = EditMode.UPDATE;
-    const res = await postApi.get(postID);
-    if (res) {
-      Object.assign(model, res);
+    try {
+      commonFn.showLoading();
+      const res = await postApi.get(postID);
+      if (res) {
+        Object.assign(model, res);
+      }
+    } finally {
+      commonFn.hideLoading();
     }
   }
+
+  // add keyboard ctrl + s to save
+  window.addEventListener("keydown", keydown);
 });
+
+onUnmounted(() => {
+  window.removeEventListener("keydown", keydown);
+});
+
+const keydown = (e) => {
+  if (e.ctrlKey && e.key === "s") {
+    e.preventDefault();
+    save();
+  }
+};
 
 const backToList = () => {
   router.push({ name: "post" });
@@ -70,26 +90,24 @@ const saveDraft = () => {
  *
  */
 const save = async () => {
+  const userJSON = localStorage.getItem("user");
+  const user = JSON.parse(userJSON);
   const payload = {
     ...model,
-    user: {
-      userID: '1ddfbad6-5e7f-4e62-84ee-1c66ceda291b',
-      discriminator: "UserAuthenEntity"
-    },
+    user: user,
     category: {
-      categoryID: '5e556834-79b5-11ef-ae13-088fc3196a52',
-    }
+      categoryID: "5e556834-79b5-11ef-ae13-088fc3196a52",
+    },
   };
   const res = await postApi.save(payload, editMode.value);
   if (res) {
-    router.push({ name: "post" });
     toast.success("Post saved successfully");
   }
 };
 </script>
 
 <style lang="scss">
-.title-input{
+.title-input {
   font-size: 20px;
 }
 </style>

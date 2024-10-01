@@ -106,6 +106,8 @@ const login = async () => {
       const accessToken = res.accessToken;
       const expiredHours = res.expiresIn;
       const role = commonFn.getRoleFromAccessToken(accessToken);
+      
+      localStorage.setItem("user", JSON.stringify(res.user));
 
       commonFn.setCookie("accessToken", accessToken, expiredHours || 48);
       if (role == "Admin") {
