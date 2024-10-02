@@ -1,4 +1,7 @@
 import { useLoading } from "vue-loading-overlay";
+import _resources from "./resources/_resources";
+import _enum from "./enum";
+import moment from "moment";
 
 const toggleDarkMode = (darkMode) => {
   localStorage.setItem("darkMode", darkMode);
@@ -75,6 +78,10 @@ const getRoleInCookie = () => {
 };
 
 const showLoading = () => {
+  // check if loading is already shown
+  if (window.loader) {
+    return;
+  }
   const $loading = useLoading({});
   window.loader = $loading.show();
 };
@@ -82,8 +89,24 @@ const showLoading = () => {
 const hideLoading = () => {
   if (window.loader) {
     window.loader.hide();
+    window.loader = null;
   }
 };
+
+const formatDate = (date) => {
+  return moment(date).format("DD/MM/YYYY");
+}
+
+const getResourceByEnum = (enumName, value) => {
+  const resources = _resources[enumName];
+  const enums = _enum[enumName];
+  if(!enums){
+    console.log(`Enum ${enumName} not found`);
+    return;
+  }
+  const enumKey = Object.keys(enums).find((key) => enums[key] === value);
+  return resources[enumKey];
+}
 
 export default {
   toggleDarkMode,
@@ -96,4 +119,6 @@ export default {
   showLoading,
   hideLoading,
   checkCookieExpired,
+  formatDate,
+  getResourceByEnum
 };

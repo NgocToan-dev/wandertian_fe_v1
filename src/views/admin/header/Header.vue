@@ -1,6 +1,6 @@
 <template>
   <div
-    class="flex justify-between items-center border-b-2 border-gray-200 dark:border-gray-700 p-4"
+    class="h-11 flex justify-between items-center border-b-2 border-gray-200 dark:border-gray-700 p-4"
   >
     <h2 class="text-2xl font-bold dark:text-white">{{ sidebarTitle }}</h2>
     <div class="flex gap-2">

@@ -116,7 +116,10 @@ const login = async () => {
       toast.success("Login successfully");
       router.push("/");
     }
-  } finally {
+  }catch(ex){
+    toast.error(ex.response?.data?.error);
+  }
+   finally {
     commonFn.hideLoading();
   }
 };

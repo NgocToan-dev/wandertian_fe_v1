@@ -1,25 +1,43 @@
 <template>
   <div>
     <fwb-table hoverable>
-      <fwb-table-head>
-        <fwb-table-head-cell v-for="(column, index) in columns" :key="index">
+      <fwb-table-head class="border-b-2">
+        <fwb-table-head-cell
+          class="select-none"
+          :style="{ width: column.width + 'px' }"
+          v-for="(column, index) in columns"
+          :key="index"
+          :class="{'text-center': ['date', 'enum'].includes(column.dataType)}"
+        >
           {{ column.name }}
         </fwb-table-head-cell>
-        <fwb-table-head-cell v-if="data.length > 0">
+        <fwb-table-head-cell
+          class="w-10 sticky right-0 border-b-2"
+          v-if="data.length > 0"
+        >
           <span class="sr-only">Edit</span>
         </fwb-table-head-cell>
       </fwb-table-head>
       <fwb-table-body>
-        <fwb-table-row v-for="(item, index) in data" :key="index">
+        <fwb-table-row
+          v-for="(item, index) in data"
+          :key="index"
+          @dblclick="editRow(item)"
+        >
           <fwb-table-cell
-            class="limited-char-text"
+            :style="{ width: column.width + 'px' }"
             v-for="(column, index) in columns"
             :key="index"
-            v-html="item[column.key]"
           >
+            <div v-if="column.enum" class="enum-col rounded-full border-2 p-2 text-center bg-slate-100 dark:bg-inherit">
+              {{ commonFn.getResourceByEnum(column.enum, item[column.key]) }}
+            </div>
+            <div v-else-if="column.html" v-html="item[column.key]" class="text-overflow"></div>
+            <div v-else-if="column.dataType == 'date'" class="text-center">{{ commonFn.formatDate(item[column.key]) }}</div>
+            <div v-else>{{ item[column.key] }}</div>
           </fwb-table-cell>
-          <fwb-table-cell class="w-10" v-if="data.length > 0">
-            <div class="flex justify-center gap-2">
+          <fwb-table-cell class="w-10 sticky right-0 bg-gray-100 dark:bg-inherit" v-if="data.length > 0">
+            <div class="flex justify-center gap-2 ">
               <Icon
                 @click="editRow(item)"
                 icon="mdi:pencil"
@@ -61,6 +79,7 @@
 </template>
 
 <script setup>
+import commonFn from "@/utilities/commonFn";
 import { Icon } from "@iconify/vue/dist/iconify.js";
 import {
   FwbA,
@@ -111,10 +130,13 @@ const handlePageClick = (page) => {
 </script>
 
 <style lang="scss" scoped>
-.limited-char-text {
-  max-width: 100%;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+.text-overflow {
+  white-space: normal; /* Allow text to wrap */
+  overflow: hidden; /* Hide overflow */
+  text-overflow: ellipsis; /* Show ellipsis for overflowed text */
+  display: -webkit-box; /* Required for multiline ellipsis */
+  -webkit-line-clamp: 2; /* Show only 2 lines */
+  -webkit-box-orient: vertical; /* Required for multiline ellipsis */
+  user-select: none;
 }
 </style>

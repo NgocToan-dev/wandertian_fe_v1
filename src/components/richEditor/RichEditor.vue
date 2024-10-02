@@ -51,7 +51,7 @@ const config = {
     height: 40px !important;
   }
   .fr-wrapper {
-    max-height: 600px;
+    max-height: 500px;
     overflow: auto;
   }
   ol,
@@ -59,6 +59,19 @@ const config = {
     list-style-type: revert;
     margin: revert;
     padding: revert;
+  }
+  blockquote {
+    text-align: left;
+    margin: 20px;
+    padding: 25px;
+    font-family: sans-serif;
+    font-size: 18px;
+    color: #428bca;
+    background: #f3f3f3;
+    border-radius: 7px;
+    border-top: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+    border-right: 1px solid #ccc;
   }
 }
 </style>

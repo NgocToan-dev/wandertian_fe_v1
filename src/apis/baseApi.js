@@ -2,6 +2,7 @@ import EditMode from "@/utilities/enum/EditMode";
 import httpClient from "./httpClient";
 import httpConfig from "./httpConfig";
 import { useToast } from "vue-toastification";
+import { data } from "autoprefixer";
 
 const toast = useToast();
 
@@ -17,18 +18,20 @@ class BaseApi {
     return `${this.baseURL}/api/${this.controller}`;
   }
 
-  async get(id) {
+  async getOne(payload) {
     const request = {
-      url: `${this.getApiUrl()}/${id}`,
+      url: [this.getApiUrl(), "getOne"].join("/"),
+      data: payload,
     };
-    return await httpClient.getAsync(request);
+    return await httpClient.postAsync(request);
   }
 
-  async getAll() {
+  async getAll(payload) {
     const request = {
-      url: `${this.getApiUrl()}`,
+      url: [this.getApiUrl(), "getAll"].join("/"),
+      data: payload,
     };
-    return await httpClient.getAsync(request);
+    return await httpClient.postAsync(request);
   }
 
   async save(payload, mode) {

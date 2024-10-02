@@ -20,12 +20,12 @@
 <script setup>
 import { FwbButton } from "flowbite-vue";
 import GridViewer from "@/components/grid/GridViewer.vue";
-import { onMounted, ref } from "vue";
-import router from "@/router";
+import { getCurrentInstance, onMounted, ref } from "vue";
 import postApi from "@/apis/business/postApi";
 import { useToast } from "vue-toastification";
 import commonFn from "@/utilities/commonFn";
 
+const { proxy } = getCurrentInstance();
 const toast = useToast();
 const items = ref([]);
 const totalRecords = ref(0);
@@ -34,10 +34,25 @@ const columns = ref([
   {
     name: "Title",
     key: "title",
+    width: 200,
   },
   {
     name: "Content",
     key: "content",
+    html: true,
+  },
+  {
+    name: "Status",
+    key: "status",
+    width: 100,
+    enum: "PostStatus",
+    dataType: "enum",
+  },
+  {
+    name: "Created At",
+    key: "createdAt",
+    width: 150,
+    dataType: "date",
   },
 ]);
 
@@ -46,7 +61,7 @@ onMounted(async () => {
 });
 const showPostDetail = (item) => {
   if (item.postID) {
-    router.push({ name: "postEditor", params: { id: item.postID } });
+    proxy.$router.push({ name: "postEditor", params: { id: item.postID } });
     return;
   }
   router.push({ name: "postEditor", params: { id: 0 } });
@@ -63,7 +78,10 @@ const deletePost = async (item) => {
 const refresh = async () => {
   try {
     commonFn.showLoading();
-    const res = await postApi.getAll();
+    const payload = {
+      columns: ["PostID", "Title", "Content", "Status", "CreatedAt"],
+    };
+    const res = await postApi.getAll(payload);
     if (res?.length > 0) {
       items.value = res;
       totalRecords.value = res.length;

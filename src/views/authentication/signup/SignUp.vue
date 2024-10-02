@@ -84,8 +84,11 @@ import { FwbInput, FwbButton, FwbA } from "flowbite-vue";
 import { Icon } from "@iconify/vue";
 import userApi from "@/apis/auth/userApi";
 import { useToast } from "vue-toastification";
-import router from "@/router";
+import commonFn from "@/utilities/commonFn";
+import { useRouter } from "vue-router";
+import VerifyCodeFormType from "@/utilities/enum/VerifyCodeFormType";
 
+const router = useRouter();
 const toast = useToast();
 const name = ref("");
 const email = ref("");
@@ -98,6 +101,7 @@ const signUp = async () => {
   if (!validate()) {
     return;
   }
+
   const payload = {
     username: name.value,
     email: email.value,
@@ -105,16 +109,20 @@ const signUp = async () => {
   };
 
   try {
+    commonFn.showLoading();
     const res = await userApi.registerCode(payload);
     if (res) {
       router.push({
-        name: "VerifyCode",
+        path: "/verify-code",
         query: { email: email.value, type: VerifyCodeFormType.SignUp },
       });
       toast.success("Your code is sent to your email");
     }
   } catch (error) {
+    console.log(error);
     toast.error("Sign up failed");
+  } finally {
+    commonFn.hideLoading();
   }
 };
 

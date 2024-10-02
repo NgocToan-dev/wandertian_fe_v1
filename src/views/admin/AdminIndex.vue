@@ -4,7 +4,7 @@
     <Sidebar />
     <!-- divider -->
     <div class="w-px h-full bg-gray-200 dark:bg-gray-700"></div>
-    <div class="flex-1">
+    <div class="main-layout">
       <MainLayout />
     </div>
   </div>
@@ -15,4 +15,8 @@ import MainLayout from "./mainContent/MainLayout.vue";
 import Sidebar from "./sidebar/Sidebar.vue";
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.main-layout {
+  width: calc(100% - 16rem);
+}
+</style>
