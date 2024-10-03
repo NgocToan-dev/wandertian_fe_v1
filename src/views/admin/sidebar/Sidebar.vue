@@ -75,6 +75,16 @@ const menus = [
     icon: "mdi:file-document",
   },
   {
+    name: "Category",
+    link: "/admin/category",
+    icon: "mdi:format-list-bulleted",
+  },
+  {
+    name: "Tag",
+    link: "/admin/tag",
+    icon: "mdi:tag",
+  },
+  {
     name: "Task",
     link: "/admin/task",
     icon: "mdi:format-list-numbered",

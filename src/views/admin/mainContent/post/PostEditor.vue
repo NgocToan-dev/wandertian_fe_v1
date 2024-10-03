@@ -65,7 +65,7 @@
             class="dark:text-white"
           ></FwbSelect>
           <FwbSelect
-            v-model="postTags"
+            v-model="model.tags"
             label="Tags"
             :options="tags"
             class="dark:text-white"
@@ -79,6 +79,7 @@
 <script setup>
 import categoryApi from "@/apis/business/categoryApi";
 import postApi from "@/apis/business/postApi";
+import tagApi from "@/apis/business/tagApi";
 import commonFn from "@/utilities/commonFn";
 import EditMode from "@/utilities/enum/EditMode";
 import PostStatusEnum from "@/utilities/enum/PostStatusEnum";
@@ -107,16 +108,12 @@ const postTags = ref("");
 const thumbnailBase64 = ref("");
 
 const categories = ref([]);
+const tags = ref([]);
 
 const status = [
   { name: "Draft", value: PostStatusEnum.DRAFT },
   { name: "Published", value: PostStatusEnum.PUBLISHED },
   { name: "Archived", value: PostStatusEnum.ARCHIVED },
-];
-
-const tags = [
-  { name: "Vue", value: "vue" },
-  { name: "React", value: "react" },
 ];
 
 watch(
@@ -134,6 +131,14 @@ watch(
 
 onMounted(async () => {
   await refresh();
+  
+  await getCategoryAll();
+  await getTagAll();
+  // add keyboard ctrl + s to save
+  window.addEventListener("keydown", keydown);
+});
+
+const getCategoryAll = async () => {
   const payload = {
     columns: ["CategoryID", "Name"],
   };
@@ -146,9 +151,20 @@ onMounted(async () => {
       };
     });
   }
-  // add keyboard ctrl + s to save
-  window.addEventListener("keydown", keydown);
-});
+};
+
+const getTagAll = async () => {
+  const payload = {};
+  const res = await tagApi.getAll(payload);
+  if (res) {
+    tags.value = res.map((item) => {
+      return {
+        name: item.name,
+        value: item.tagID,
+      };
+    });
+  }
+};
 
 const refresh = async () => {
   const postID = route.params.id;
@@ -210,11 +226,14 @@ const save = async () => {
     const userJSON = localStorage.getItem("user");
     const user = JSON.parse(userJSON);
     const payload = {
-      ...model,
+      post:{
+        ...model,
       userID: user.userID,
       thumbnail: model.thumbnail ? thumbnailBase64.value : null,
+      },
+      tags: [model.tags],
     };
-    const res = await postApi.save(payload, editMode.value);
+    const res = await postApi.savePost(payload, editMode.value);
     if (res) {
       toast.success("Post saved successfully");
       router.push({ name: "post", params: { id: res.postID } });

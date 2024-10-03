@@ -29,12 +29,12 @@
             v-for="(column, index) in columns"
             :key="index"
           >
-            <div v-if="column.enum" class="enum-col rounded-full border-2 p-2 text-center bg-slate-100 dark:bg-inherit">
+            <div v-if="column.enum" class="enum-col select-none rounded-full border-2 p-2 text-center bg-slate-100 dark:bg-inherit">
               {{ commonFn.getResourceByEnum(column.enum, item[column.key]) }}
             </div>
-            <div v-else-if="column.html" v-html="item[column.key]" class="text-overflow"></div>
-            <div v-else-if="column.dataType == 'date'" class="text-center">{{ commonFn.formatDate(item[column.key]) }}</div>
-            <div v-else>{{ item[column.key] }}</div>
+            <div v-else-if="column.html" v-html="item[column.key]" class="select-none text-overflow"></div>
+            <div v-else-if="column.dataType == 'date'" class="select-none text-center">{{ commonFn.formatDate(item[column.key]) }}</div>
+            <div v-else class="select-none">{{ item[column.key] }}</div>
           </fwb-table-cell>
           <fwb-table-cell class="w-10 sticky right-0 bg-gray-100 dark:bg-inherit" v-if="data.length > 0">
             <div class="flex justify-center gap-2 ">

@@ -21,6 +21,17 @@ export const adminRoutes = [
         component: () => import("@/views/admin/mainContent/post/PostList.vue"),
       },
       {
+        path: "category",
+        name: "category",
+        component: () =>
+          import("@/views/admin/mainContent/category/CategoryList.vue"),
+      },
+      {
+        path: "tag",
+        name: "tag",
+        component: () => import("@/views/admin/mainContent/tag/TagList.vue"),
+      },
+      {
         path: "post/:id",
         name: "postEditor",
         component: () =>
