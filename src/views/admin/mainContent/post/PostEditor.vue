@@ -104,7 +104,6 @@ const isPreview = ref(false);
 const editMode = ref(EditMode.INSERT);
 const createdAt = ref("");
 const updatedAt = ref("");
-const postTags = ref("");
 const thumbnailBase64 = ref("");
 
 const categories = ref([]);
@@ -130,39 +129,48 @@ watch(
 );
 
 onMounted(async () => {
-  await refresh();
-  
   await getCategoryAll();
   await getTagAll();
+  await refresh();
   // add keyboard ctrl + s to save
   window.addEventListener("keydown", keydown);
 });
 
 const getCategoryAll = async () => {
-  const payload = {
-    columns: ["CategoryID", "Name"],
-  };
-  const res = await categoryApi.getAll(payload);
-  if (res) {
-    categories.value = res.map((item) => {
-      return {
-        name: item.name,
-        value: item.categoryID,
-      };
-    });
+  try {
+    commonFn.showLoading();
+    const payload = {
+      columns: ["CategoryID", "Name"],
+    };
+    const res = await categoryApi.getAll(payload);
+    if (res) {
+      categories.value = res.map((item) => {
+        return {
+          name: item.name,
+          value: item.categoryID,
+        };
+      });
+    }
+  } finally {
+    commonFn.hideLoading();
   }
 };
 
 const getTagAll = async () => {
-  const payload = {};
-  const res = await tagApi.getAll(payload);
-  if (res) {
-    tags.value = res.map((item) => {
-      return {
-        name: item.name,
-        value: item.tagID,
-      };
-    });
+  try {
+    commonFn.showLoading();
+    const payload = {};
+    const res = await tagApi.getAll(payload);
+    if (res) {
+      tags.value = res.map((item) => {
+        return {
+          name: item.name,
+          value: item.tagID,
+        };
+      });
+    }
+  } finally {
+    commonFn.hideLoading();
   }
 };
 
@@ -172,15 +180,14 @@ const refresh = async () => {
     editMode.value = EditMode.UPDATE;
     try {
       commonFn.showLoading();
-      const payload = {
-        id: postID,
-      };
-      const res = await postApi.getOne(payload);
+      const res = await postApi.get(postID);
       if (res) {
+        const post = res.post;
         // change all date to format date time
-        createdAt.value = commonFn.formatDate(res.createdAt);
-        updatedAt.value = commonFn.formatDate(res.updatedAt);
-        Object.assign(model, res);
+        createdAt.value = commonFn.formatDate(post.createdAt);
+        updatedAt.value = commonFn.formatDate(post.updatedAt);
+        post.tags = res.tags.join(", ");
+        Object.assign(model, post);
         beforeBinding(model);
       }
     } finally {
@@ -226,10 +233,10 @@ const save = async () => {
     const userJSON = localStorage.getItem("user");
     const user = JSON.parse(userJSON);
     const payload = {
-      post:{
+      post: {
         ...model,
-      userID: user.userID,
-      thumbnail: model.thumbnail ? thumbnailBase64.value : null,
+        userID: user.userID,
+        thumbnail: model.thumbnail ? thumbnailBase64.value : null,
       },
       tags: [model.tags],
     };
@@ -254,6 +261,10 @@ const validateAll = () => {
   }
   if (!model.categoryID) {
     toast.error("Category is required");
+    return false;
+  }
+  if (!model.tags) {
+    toast.error("Tags is required");
     return false;
   }
   return true;

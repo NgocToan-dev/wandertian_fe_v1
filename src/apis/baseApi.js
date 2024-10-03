@@ -26,6 +26,13 @@ class BaseApi {
     return await httpClient.postAsync(request);
   }
 
+  async get(id) {
+    const request = {
+      url: [this.getApiUrl(), id].join("/"),
+    };
+    return await httpClient.getAsync(request);
+  }
+
   async getAll(payload) {
     const request = {
       url: [this.getApiUrl(), "getAll"].join("/"),

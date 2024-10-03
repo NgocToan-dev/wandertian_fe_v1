@@ -5,48 +5,44 @@
 </template>
 
 <script setup>
-import postApi from "@/apis/business/postApi";
-import commonFn from "@/utilities/commonFn";
-import { onMounted, reactive, ref } from "vue";
+import { onMounted, reactive, ref, watch } from "vue";
 
 const options = ref({});
 
 const series = ref([]);
 
-onMounted(async () => {
-  const payload = {
-    columns: ["PostID", "Title", "Content", "Status", "CreatedAt", "Category" ],
-  };
-  const res = await postApi.getAll(payload);
-  if (res) {
-    const categoryCounts = res.reduce((acc, post) => {
-      const key = post.category.name;
-      acc[key] = (acc[key] || 0) + 1;
-      return acc;
-    }, {});
+const props = defineProps({
+  width: {
+    type: Number,
+    default: 380,
+  },
+  type: {
+    type: String,
+    default: "donut",
+  },
+  labels: {
+    type: Array,
+    default: () => [],
+  },
+  data: {
+    type: Array,
+    default: () => [],
+  },
+});
 
+watch(
+  () => JSON.stringify({ labels: props.labels, data: props.data }),
+  (newVal) => {
+    const { labels, data } = JSON.parse(newVal);
     options.value = {
       chart: {
-        type: "donut",
+        type: props.type,
       },
-      labels: Object.keys(categoryCounts),
-      responsive: [
-        {
-          breakpoint: 480,
-          options: {
-            chart: {
-              width: 200,
-            },
-            legend: {
-              position: "bottom",
-            },
-          },
-        },
-      ],
+      labels,
     };
-    series.value = Object.values(categoryCounts);
+    series.value = data;
   }
-});
+);
 </script>
 
 <style lang="postcss"></style>
