@@ -2,7 +2,6 @@
   <div class="rich-editor">
     <froala
       class="remove-list-style"
-      tag="textarea"
       v-if="!readOnly"
       :config="config"
       v-model:value="model"
@@ -72,6 +71,10 @@ const config = {
     border-top: 1px solid #ccc;
     border-bottom: 1px solid #ccc;
     border-right: 1px solid #ccc;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    font-weight: revert;
+    font-size: revert;
   }
 }
 </style>

@@ -14,7 +14,6 @@
             class="flex-1"
             v-model="model.name"
             @blur="validateField('name')"
-            @input="validateField('name')"
           >
             <template #validationMessage>
               <div v-if="errors.name" class="text-red-500">{{ errors.name }}</div>

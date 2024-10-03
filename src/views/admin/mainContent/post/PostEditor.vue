@@ -129,48 +129,43 @@ watch(
 );
 
 onMounted(async () => {
-  await getCategoryAll();
-  await getTagAll();
-  await refresh();
+  try {
+    commonFn.showLoading();
+    await getCategoryAll();
+    await getTagAll();
+    await refresh();
+  } finally {
+    commonFn.hideLoading();
+  }
   // add keyboard ctrl + s to save
   window.addEventListener("keydown", keydown);
 });
 
 const getCategoryAll = async () => {
-  try {
-    commonFn.showLoading();
-    const payload = {
-      columns: ["CategoryID", "Name"],
-    };
-    const res = await categoryApi.getAll(payload);
-    if (res) {
-      categories.value = res.map((item) => {
-        return {
-          name: item.name,
-          value: item.categoryID,
-        };
-      });
-    }
-  } finally {
-    commonFn.hideLoading();
+  const payload = {
+    columns: ["CategoryID", "Name"],
+  };
+  const res = await categoryApi.getAll(payload);
+  if (res) {
+    categories.value = res.map((item) => {
+      return {
+        name: item.name,
+        value: item.categoryID,
+      };
+    });
   }
 };
 
 const getTagAll = async () => {
-  try {
-    commonFn.showLoading();
-    const payload = {};
-    const res = await tagApi.getAll(payload);
-    if (res) {
-      tags.value = res.map((item) => {
-        return {
-          name: item.name,
-          value: item.tagID,
-        };
-      });
-    }
-  } finally {
-    commonFn.hideLoading();
+  const payload = {};
+  const res = await tagApi.getAll(payload);
+  if (res) {
+    tags.value = res.map((item) => {
+      return {
+        name: item.name,
+        value: item.tagID,
+      };
+    });
   }
 };
 
@@ -178,20 +173,16 @@ const refresh = async () => {
   const postID = route.params.id;
   if (postID != 0) {
     editMode.value = EditMode.UPDATE;
-    try {
-      commonFn.showLoading();
-      const res = await postApi.get(postID);
-      if (res) {
-        const post = res.post;
-        // change all date to format date time
-        createdAt.value = commonFn.formatDate(post.createdAt);
-        updatedAt.value = commonFn.formatDate(post.updatedAt);
-        post.tags = res.tags.join(", ");
-        Object.assign(model, post);
-        beforeBinding(model);
-      }
-    } finally {
-      commonFn.hideLoading();
+
+    const res = await postApi.get(postID);
+    if (res) {
+      const post = res.post;
+      // change all date to format date time
+      createdAt.value = commonFn.formatDate(post.createdAt);
+      updatedAt.value = commonFn.formatDate(post.updatedAt);
+      post.tags = res.tags.join(", ");
+      Object.assign(model, post);
+      beforeBinding(model);
     }
   }
 };
@@ -225,28 +216,23 @@ const preview = () => {
  *
  */
 const save = async () => {
-  try {
-    if (!validateAll()) {
-      return;
-    }
-    commonFn.showLoading();
-    const userJSON = localStorage.getItem("user");
-    const user = JSON.parse(userJSON);
-    const payload = {
-      post: {
-        ...model,
-        userID: user.userID,
-        thumbnail: model.thumbnail ? thumbnailBase64.value : null,
-      },
-      tags: [model.tags],
-    };
-    const res = await postApi.savePost(payload, editMode.value);
-    if (res) {
-      toast.success("Post saved successfully");
-      router.push({ name: "post", params: { id: res.postID } });
-    }
-  } finally {
-    commonFn.hideLoading();
+  if (!validateAll()) {
+    return;
+  }
+  const userJSON = localStorage.getItem("user");
+  const user = JSON.parse(userJSON);
+  const payload = {
+    post: {
+      ...model,
+      userID: user.userID,
+      thumbnail: model.thumbnail ? thumbnailBase64.value : null,
+    },
+    tags: [model.tags],
+  };
+  const res = await postApi.savePost(payload, editMode.value);
+  if (res) {
+    toast.success("Post saved successfully");
+    router.push({ name: "post", params: { id: res.postID } });
   }
 };
 
