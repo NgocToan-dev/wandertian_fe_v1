@@ -64,7 +64,7 @@ const showPostDetail = (item) => {
     proxy.$router.push({ name: "postEditor", params: { id: item.postID } });
     return;
   }
-  router.push({ name: "postEditor", params: { id: 0 } });
+  proxy.$router.push({ name: "postEditor", params: { id: 0 } });
 };
 
 const deletePost = async (item) => {

@@ -157,7 +157,6 @@ const refresh = async () => {
     try {
       commonFn.showLoading();
       const payload = {
-        columns: ["PostID", "Title", "Content", "CategoryID", "Status", "Thumbnail"],
         id: postID,
       };
       const res = await postApi.getOne(payload);
@@ -204,6 +203,9 @@ const preview = () => {
  */
 const save = async () => {
   try {
+    if (!validateAll()) {
+      return;
+    }
     commonFn.showLoading();
     const userJSON = localStorage.getItem("user");
     const user = JSON.parse(userJSON);
@@ -215,11 +217,27 @@ const save = async () => {
     const res = await postApi.save(payload, editMode.value);
     if (res) {
       toast.success("Post saved successfully");
-      await refresh();
+      router.push({ name: "post", params: { id: res.postID } });
     }
   } finally {
     commonFn.hideLoading();
   }
+};
+
+const validateAll = () => {
+  if (!model.title) {
+    toast.error("Title is required");
+    return false;
+  }
+  if (!model.content) {
+    toast.error("Content is required");
+    return false;
+  }
+  if (!model.categoryID) {
+    toast.error("Category is required");
+    return false;
+  }
+  return true;
 };
 </script>
 

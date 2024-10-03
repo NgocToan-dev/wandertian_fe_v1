@@ -65,6 +65,11 @@ const sidebarStore = useSidebarTabStore();
 
 const menus = [
   {
+    name: "Dashboard",
+    link: "/admin/dashboard",
+    icon: "mdi:home",
+  },
+  {
     name: "Post",
     link: "/admin/post",
     icon: "mdi:file-document",
@@ -73,11 +78,6 @@ const menus = [
     name: "Task",
     link: "/admin/task",
     icon: "mdi:format-list-numbered",
-  },
-  {
-    name: "Dashboard",
-    link: "/admin/dashboard",
-    icon: "mdi:home",
   },
   {
     type: SidebarItemType.Divider,

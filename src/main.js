@@ -24,12 +24,15 @@ import { createPinia } from "pinia";
 
 const pinia = createPinia();
 
+import VueApexCharts from "vue3-apexcharts";
+
 const app = createApp(App);
 app.use(router);
 app.use(VueFroala);
 app.use(globalComponents);
 app.use(pinia);
 app.use(LoadingPlugin);
+app.use(VueApexCharts);
 app.use(Toast, {
   timeout: 2000,
 });
