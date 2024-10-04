@@ -1,13 +1,18 @@
 <template>
   <div class="rich-editor">
     <froala
-      class="remove-list-style dark:text-white"
+      class="remove-list-style dark:text-white max-h-full flex flex-col"
       v-if="!readOnly"
       :config="config"
       v-model:value="model"
     >
     </froala>
-    <froalaView v-if="readOnly" class="dark:text-white" :config="config" v-model:value="model" />
+    <froalaView
+      v-if="readOnly"
+      class="dark:text-white max-h-full overflow-auto"
+      :config="config"
+      v-model:value="model"
+    />
   </div>
 </template>
 
@@ -49,8 +54,8 @@ const config = {
   .fr-quick-insert a.fr-floating-btn svg {
     height: 40px !important;
   }
-  .fr-wrapper {
-    max-height: 500px;
+  .fr-wrapper{
+    flex: 1;
     overflow: auto;
   }
   ol,
@@ -72,9 +77,17 @@ const config = {
     border-bottom: 1px solid #ccc;
     border-right: 1px solid #ccc;
   }
-  h1, h2, h3, h4, h5, h6 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     font-weight: revert;
     font-size: revert;
+  }
+  th, td{
+    padding: 10px;
   }
 }
 </style>

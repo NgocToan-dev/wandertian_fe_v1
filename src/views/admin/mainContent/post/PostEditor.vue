@@ -1,7 +1,7 @@
 <template>
   <div class="p-4">
     <!-- save button -->
-    <div class="flex justify-between align-items-center">
+    <div class="h-9 flex justify-between align-items-center">
       <div class="backToList cursor-pointer flex items-center" @click="backToList">
         <Icon icon="mdi:arrow-left" class="text-xl hover:text-slate-500" />
       </div>
@@ -17,16 +17,10 @@
         <fwb-button @click="save"> Save </fwb-button>
       </fwb-button-group>
     </div>
-    <div class="editor-section flex gap-5">
-      <div class="flex-1 mt-2 flex flex-col">
-        <div class="flex justify-start mb-3">
-          <div class="flex items-center gap-2">
-            <span class="italic text-xs text-gray-400"
-              >Created Date: {{ createdAt }} - Updated Date: {{ updatedAt }}</span
-            >
-          </div>
-        </div>
+    <div class="editor-section flex gap-5" style="height: calc(100% - 36px)">
+      <div class="flex-1 mt-2 max-h-full">
         <div
+          height="50"
           contenteditable="true"
           class="title-input font-bold text-2xl mb-3 focus:outline-none border-b-2 border-gray-300 dark:border-gray-700 dark:text-white"
           @input="
@@ -37,10 +31,17 @@
         >
           {{ model.title }}
         </div>
-
-        <rich-editor v-model="model.content" :read-only="isPreview" class="flex-1" />
+        <rich-editor
+          v-model="model.content"
+          :read-only="isPreview"
+          style="height: calc(100% - 50px)"
+        />
       </div>
       <div class="w-64 h-full mt-2">
+        <div class="flex flex-col items-end w-full">
+          <div class="italic text-xs text-gray-400">Created Date: {{ createdAt }}</div>
+          <div class="italic text-xs text-gray-400">Updated Date: {{ updatedAt }}</div>
+        </div>
         <div class="flex flex-col gap-2">
           <FwbSelect
             v-model="model.status"

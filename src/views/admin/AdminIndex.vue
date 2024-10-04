@@ -4,7 +4,7 @@
     <Sidebar />
     <!-- divider -->
     <div class="w-px h-full bg-gray-200 dark:bg-gray-700"></div>
-    <div class="main-layout">
+    <div class="main-layout max-h-screen">
       <MainLayout />
     </div>
   </div>
