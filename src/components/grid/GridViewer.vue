@@ -130,13 +130,5 @@ const handlePageClick = (page) => {
 </script>
 
 <style lang="scss" scoped>
-.text-overflow {
-  white-space: normal; /* Allow text to wrap */
-  overflow: hidden; /* Hide overflow */
-  text-overflow: ellipsis; /* Show ellipsis for overflowed text */
-  display: -webkit-box; /* Required for multiline ellipsis */
-  -webkit-line-clamp: 2; /* Show only 2 lines */
-  -webkit-box-orient: vertical; /* Required for multiline ellipsis */
-  user-select: none;
-}
+
 </style>

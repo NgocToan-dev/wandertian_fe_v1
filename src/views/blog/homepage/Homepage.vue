@@ -2,31 +2,26 @@
   <!-- homepage of blog main content -->
   <div class="container mx-auto p-4">
     <div class="grid grid-cols-12">
-      <div class="col-span-9 flex flex-col gap-5">
-        <!-- main content -->
-        <fwb-card
-          variant="horizontal"
-          v-for="(news, index) in listNews"
-          :key="index"
-          @click.prevent="goToDetail(news.id)"
-        >
-          <div class="flex">
-            <!-- image -->
-            <div class="w-1/3">
-              <img :src="news.img" alt="news" class="w-full h-full object-cover" />
+      <div class="col-span-9">
+        <div class="flex flex-wrap gap-5">
+          <!-- main content -->
+          <fwb-card variant="horizontal" v-for="(news, index) in listNews" :key="index"
+            @click.prevent="goToDetail(news.postID)" class="max-w-44">
+            <div class="flex">
+              <!-- image -->
+              <div class="w-1/3" v-if="news.img">
+                <img :src="news.img" alt="news" class="w-full h-full object-cover" />
+              </div>
+              <div class="flex-1 p-5">
+                <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+                  {{ news.title }}
+                </h5>
+                <p class="font-normal text-gray-700 dark:text-gray-400 text-overflow" v-html="news.content">
+                </p>
+              </div>
             </div>
-            <div class="flex-1 p-5">
-              <h5
-                class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white"
-              >
-                {{ news.title }}
-              </h5>
-              <p class="font-normal text-gray-700 dark:text-gray-400">
-                {{ news.description }}
-              </p>
-            </div>
-          </div>
-        </fwb-card>
+          </fwb-card>
+        </div>
       </div>
       <div class="col-span-3 p-4 flex flex-col gap-5">
         <!-- sidebar -->
@@ -46,27 +41,12 @@
         <fwb-card variant="image">
           <div class="p-5 flex flex-col gap-2">
             <p class="text-gray-900 dark:text-white">Search News</p>
-            <fwb-input
-              v-model="searchNewsText"
-              placeholder="enter your news title"
-              size="lg"
-              @keyup.enter="searchNews"
-            >
+            <fwb-input v-model="searchNewsText" placeholder="enter your news title" size="lg" @keyup.enter="searchNews">
               <template #prefix>
-                <svg
-                  aria-hidden="true"
-                  class="w-5 h-5 text-gray-500 dark:text-gray-400"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                  />
+                <svg aria-hidden="true" class="w-5 h-5 text-gray-500 dark:text-gray-400" fill="none"
+                  stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linecap="round" stroke-linejoin="round"
+                    stroke-width="2" />
                 </svg>
               </template>
               <template #suffix>
@@ -81,35 +61,22 @@
 </template>
 
 <script setup>
+import postApi from "@/apis/business/postApi";
 import { FwbCard, FwbAvatar, FwbInput, FwbButton } from "flowbite-vue";
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
 
 const router = useRouter();
 
-const listNews = ref([
-  {
-    id: 1,
-    title: "Noteworthy technology acquisitions 2021",
-    description:
-      "Here are the biggest enterprise technology acquisitions of 2021 so far, in reverse chronological order.",
-    img: "https://flowbite.com/docs/images/blog/image-4.jpg",
-  },
-  {
-    id: 2,
-    title: "Noteworthy technology acquisitions 2021",
-    description:
-      "Here are the biggest enterprise technology acquisitions of 2021 so far, in reverse chronological order.",
-    img: "https://flowbite.com/docs/images/blog/image-2.jpg",
-  },
-  {
-    id: 3,
-    title: "Noteworthy technology acquisitions 2021",
-    description:
-      "Here are the biggest enterprise technology acquisitions of 2021 so far, in reverse chronological order.",
-    img: "https://flowbite.com/docs/images/blog/image-1.jpg",
-  },
-]);
+const listNews = ref([]);
+
+onMounted(async () => {
+  const res = await postApi.getAll({});
+  if (res) {
+    listNews.value = res;
+    console.log(res);
+  }
+});
 const author = ref({
   name: "Ngọc Toản",
   img: "https://flowbite.com/docs/images/people/profile-picture-1.jpg",
@@ -123,7 +90,7 @@ const searchNews = () => {
 };
 
 const goToDetail = (id) => {
-  router.push(`/post/${id}`);
+  router.push({name: 'postDetail', params: {id: id}});
 };
 </script>
 

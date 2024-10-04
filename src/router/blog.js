@@ -13,6 +13,7 @@ export const blogRoutes = [
       },
       {
         path: "post/:id",
+        name: "postDetail",
         component: () => import("@/views/blog/post/PostDetail.vue"),
       },
     ],
