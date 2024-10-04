@@ -219,20 +219,25 @@ const save = async () => {
   if (!validateAll()) {
     return;
   }
-  const userJSON = localStorage.getItem("user");
-  const user = JSON.parse(userJSON);
-  const payload = {
-    post: {
-      ...model,
-      userID: user.userID,
-      thumbnail: model.thumbnail ? thumbnailBase64.value : null,
-    },
-    tags: [model.tags],
-  };
-  const res = await postApi.savePost(payload, editMode.value);
-  if (res) {
-    toast.success("Post saved successfully");
-    router.push({ name: "post", params: { id: res.postID } });
+  try {
+    commonFn.showLoading();
+    const userJSON = localStorage.getItem("user");
+    const user = JSON.parse(userJSON);
+    const payload = {
+      post: {
+        ...model,
+        userID: user.userID,
+        thumbnail: model.thumbnail ? thumbnailBase64.value : null,
+      },
+      tags: [model.tags],
+    };
+    const res = await postApi.savePost(payload, editMode.value);
+    if (res) {
+      toast.success("Post saved successfully");
+      router.push({ name: "post", params: { id: res.postID } });
+    }
+  } finally {
+    commonFn.hideLoading();
   }
 };
 
