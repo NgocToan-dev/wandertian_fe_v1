@@ -1,13 +1,13 @@
 <template>
   <div class="rich-editor">
     <froala
-      class="remove-list-style"
+      class="remove-list-style dark:text-white"
       v-if="!readOnly"
       :config="config"
       v-model:value="model"
     >
     </froala>
-    <froalaView v-if="readOnly" :config="config" v-model:value="model" />
+    <froalaView v-if="readOnly" class="dark:text-white" :config="config" v-model:value="model" />
   </div>
 </template>
 
