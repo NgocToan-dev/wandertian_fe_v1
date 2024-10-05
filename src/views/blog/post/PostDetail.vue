@@ -22,7 +22,7 @@
         <!-- Comment -->
         <div class="comment mt-5">
           <h3 class="text-gray-900 dark:text-white">Comment</h3>
-          <comment-list />
+          <comment-list v-model="comments"/>
         </div>
       </div>
       <div class="w-80">
@@ -60,6 +60,50 @@ import RelatedPost from "./RelatedPost.vue";
 
 const route = useRoute();
 const news = reactive({});
+const comments = ref([
+  {
+    id: 1,
+    content:
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla tincidunt, nunc nec ultricies.",
+    user: {
+      name: "John Doe",
+      avatar: "https://cdn.fakercloud.com/avatars/erwanhesry_128.jpg",
+    },
+    createdAt: "2 days ago",
+    children: [
+      {
+        id: 3,
+        content:
+          "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla tincidunt, nunc nec ultricies.",
+        user: {
+          name: "John Doe",
+          avatar: "https://cdn.fakercloud.com/avatars/erwanhesry_128.jpg",
+        },
+        createdAt: "2 days ago",
+      },
+      {
+        id: 4,
+        content:
+          "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla tincidunt, nunc nec ultricies.",
+        user: {
+          name: "John Doe",
+          avatar: "https://cdn.fakercloud.com/avatars/erwanhesry_128.jpg",
+        },
+        createdAt: "2 days ago",
+      },
+    ],
+  },
+  {
+    id: 2,
+    content:
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla tincidunt, nunc nec ultricies.",
+    user: {
+      name: "Jane Doe",
+      avatar: "https://cdn.fakercloud.com/avatars/erwanhesry_128.jpg",
+    },
+    createdAt: "3 days ago",
+  },
+]);
 const relatedPosts = ref([
   {
     id: 1,

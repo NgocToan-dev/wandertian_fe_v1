@@ -41,7 +41,7 @@ const isShowTagDetail = ref(false);
 const columns = ref([
   {
     name: "Name",
-    key: "name",
+    key: "tagName",
   },
 ]);
 

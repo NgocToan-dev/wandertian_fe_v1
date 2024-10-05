@@ -12,7 +12,7 @@
           <FwbInput
             label="Title"
             class="flex-1"
-            v-model="model.name"
+            v-model="model.tagName"
             @blur="validateField('name')"
           >
             <template #validationMessage>
@@ -84,7 +84,7 @@ const save = async () => {
 };
 
 const validateField = (fieldName) => {
-  if (fieldName === "name" && !model.value.name) {
+  if (fieldName === "name" && !model.value.tagName) {
     errors.value.name = "Tag name is required";
   } else {
     errors.value.name = "";

@@ -16,50 +16,7 @@ import CommentDetail from "./CommentDetail.vue";
 import { FwbInput, FwbButton } from "flowbite-vue";
 import { Icon } from "@iconify/vue";
 
-const comments = ref([
-  {
-    id: 1,
-    content:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla tincidunt, nunc nec ultricies.",
-    user: {
-      name: "John Doe",
-      avatar: "https://cdn.fakercloud.com/avatars/erwanhesry_128.jpg",
-    },
-    createdAt: "2 days ago",
-    children: [
-      {
-        id: 3,
-        content:
-          "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla tincidunt, nunc nec ultricies.",
-        user: {
-          name: "John Doe",
-          avatar: "https://cdn.fakercloud.com/avatars/erwanhesry_128.jpg",
-        },
-        createdAt: "2 days ago",
-      },
-      {
-        id: 4,
-        content:
-          "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla tincidunt, nunc nec ultricies.",
-        user: {
-          name: "John Doe",
-          avatar: "https://cdn.fakercloud.com/avatars/erwanhesry_128.jpg",
-        },
-        createdAt: "2 days ago",
-      },
-    ],
-  },
-  {
-    id: 2,
-    content:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla tincidunt, nunc nec ultricies.",
-    user: {
-      name: "Jane Doe",
-      avatar: "https://cdn.fakercloud.com/avatars/erwanhesry_128.jpg",
-    },
-    createdAt: "3 days ago",
-  },
-]);
+const comments = defineModel();
 </script>
 
 <style lang="scss" scoped></style>

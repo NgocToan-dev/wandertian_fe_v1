@@ -66,6 +66,7 @@
             class="dark:text-white"
           ></FwbSelect>
           <FwbSelect
+            @input="selectTags"
             v-model="model.tags"
             label="Tags"
             :options="tags"
@@ -85,14 +86,7 @@ import commonFn from "@/utilities/commonFn";
 import EditMode from "@/utilities/enum/EditMode";
 import PostStatusEnum from "@/utilities/enum/PostStatusEnum";
 import { Icon } from "@iconify/vue/dist/iconify.js";
-import {
-  FwbButtonGroup,
-  FwbButton,
-  FwbInput,
-  FwbFileInput,
-  FwbSelect,
-  FwbTextarea,
-} from "flowbite-vue";
+import { FwbButtonGroup, FwbButton, FwbFileInput, FwbSelect } from "flowbite-vue";
 import { onMounted, onUnmounted, reactive, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useToast } from "vue-toastification";
@@ -163,7 +157,7 @@ const getTagAll = async () => {
   if (res) {
     tags.value = res.map((item) => {
       return {
-        name: item.name,
+        name: item.tagName,
         value: item.tagID,
       };
     });
@@ -181,7 +175,8 @@ const refresh = async () => {
       // change all date to format date time
       createdAt.value = commonFn.formatDate(post.createdAt);
       updatedAt.value = commonFn.formatDate(post.updatedAt);
-      post.tags = res.tags.join(", ");
+      debugger
+      post.tags = res.tags[0].tagID;
       Object.assign(model, post);
       beforeBinding(model);
     }
@@ -210,6 +205,14 @@ const backToList = () => {
 };
 const preview = () => {
   isPreview.value = !isPreview.value;
+};
+
+const selectTags = (e) => {
+  const tagTemp = tags.value.find((x) => x.value == e.target.value);
+  model.tags = {
+    tagID: tagTemp.value,
+    tagName: tagTemp.name,
+  };
 };
 
 /**
