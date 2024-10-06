@@ -65,13 +65,14 @@
             :options="categories"
             class="dark:text-white"
           ></FwbSelect>
-          <FwbSelect
-            @input="selectTags"
+          <WTCombobox
             v-model="model.tags"
             label="Tags"
-            :options="tags"
+            :data="tags"
+            value-field="tagID"
+            display-field="tagName"
             class="dark:text-white"
-          ></FwbSelect>
+          />
         </div>
       </div>
     </div>
@@ -82,6 +83,7 @@
 import categoryApi from "@/apis/business/categoryApi";
 import postApi from "@/apis/business/postApi";
 import tagApi from "@/apis/business/tagApi";
+import WTCombobox from "@/components/combobox/WTCombobox.vue";
 import commonFn from "@/utilities/commonFn";
 import EditMode from "@/utilities/enum/EditMode";
 import PostStatusEnum from "@/utilities/enum/PostStatusEnum";
@@ -138,13 +140,13 @@ onMounted(async () => {
 
 const getCategoryAll = async () => {
   const payload = {
-    columns: ["CategoryID", "Name"],
+    columns: ["CategoryID", "CategoryName"],
   };
   const res = await categoryApi.getAll(payload);
   if (res) {
     categories.value = res.map((item) => {
       return {
-        name: item.name,
+        name: item.categoryName,
         value: item.categoryID,
       };
     });
@@ -155,12 +157,7 @@ const getTagAll = async () => {
   const payload = {};
   const res = await tagApi.getAll(payload);
   if (res) {
-    tags.value = res.map((item) => {
-      return {
-        name: item.tagName,
-        value: item.tagID,
-      };
-    });
+    tags.value = res;
   }
 };
 
@@ -175,12 +172,11 @@ const refresh = async () => {
       // change all date to format date time
       createdAt.value = commonFn.formatDate(post.createdAt);
       updatedAt.value = commonFn.formatDate(post.updatedAt);
-      debugger
-      post.tags = res.tags[0].tagID;
+      post.tags = res.tags;
       Object.assign(model, post);
-      beforeBinding(model);
     }
   }
+  beforeBinding(model);
 };
 
 const beforeBinding = (model) => {
@@ -206,15 +202,6 @@ const backToList = () => {
 const preview = () => {
   isPreview.value = !isPreview.value;
 };
-
-const selectTags = (e) => {
-  const tagTemp = tags.value.find((x) => x.value == e.target.value);
-  model.tags = {
-    tagID: tagTemp.value,
-    tagName: tagTemp.name,
-  };
-};
-
 /**
  * Save post content
  *
@@ -227,13 +214,15 @@ const save = async () => {
     commonFn.showLoading();
     const userJSON = localStorage.getItem("user");
     const user = JSON.parse(userJSON);
+    const categoryName = categories.value.find((item) => item.value == model.categoryID).name;
     const payload = {
       post: {
         ...model,
         userID: user.userID,
         thumbnail: model.thumbnail ? thumbnailBase64.value : null,
+        categoryName: categoryName,
       },
-      tags: [model.tags],
+      tags: model.tags,
     };
     const res = await postApi.savePost(payload, editMode.value);
     if (res) {
