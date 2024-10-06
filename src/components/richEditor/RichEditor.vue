@@ -32,6 +32,7 @@ const config = {
   charCounterCount: false,
   listAdvancedTypes: true,
   placeholderText: "How's it going today? Do you have fun? Any story?",
+  entities: '&quot;&#39;&iexcl;&cent;&pound;&curren;&yen;&brvbar;',
   events: {
     initialized: function () {
       const editor = this;

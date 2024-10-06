@@ -6,7 +6,7 @@
         image-url="https://flowbite.com/docs/images/logo.svg"
         link="#"
       >
-        Flowbite
+        Wandertian
       </fwb-navbar-logo>
     </template>
     <template #default="{ isShowMenu }">

@@ -41,6 +41,22 @@ class BaseApi {
     return await httpClient.postAsync(request);
   }
 
+  async getPaging(payload){
+    const request = {
+      url: [this.getApiUrl(), "getPaging"].join("/"),
+      data: payload,
+    };
+    return await httpClient.postAsync(request);
+  }
+
+  async getSummary(payload){
+    const request = {
+      url: [this.getApiUrl(), "getSummary"].join("/"),
+      data: payload
+    };
+    return await httpClient.postAsync(request);
+  }
+
   async save(payload, mode) {
     var request = {
       url: `${this.getApiUrl()}`,

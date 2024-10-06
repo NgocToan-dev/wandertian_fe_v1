@@ -37,7 +37,7 @@ const isShowCategoryDetail = ref(false);
 const columns = ref([
   {
     name: "Name",
-    key: "name",
+    key: "categoryName",
     width: 200,
   },
   {

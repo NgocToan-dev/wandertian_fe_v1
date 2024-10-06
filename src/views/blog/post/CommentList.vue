@@ -23,26 +23,17 @@ import SpecialValue from "@/utilities/enum/SpecialValue";
 
 const comments = defineModel();
 const commentTreeList = computed(() => {
-  const tree = [];
-  const commentsVirtual = [...comments.value] || [];
-  // remove all children
-  commentsVirtual.forEach((comment) => {
-    delete comment.children;
-  });
-  commentsVirtual.forEach((comment) => {
-    if (!comment.parentID || comment.parentID === SpecialValue.GuidEmpty) {
-      tree.push(comment);
-    } else {
-      const parent = comments.value.find((c) => c.commentID === comment.parentID);
-      if (parent) {
-        if (!parent.children) {
-          parent.children = [];
-        }
-        parent.children.push(comment);
-      }
-    }
-  });
-  return tree;
+  const buildTree = (comments, parentID) => {
+    if(!comments) return [];
+    return comments
+      .filter((comment) => comment.parentID === parentID)
+      .map((comment) => ({
+        ...comment,
+        children: buildTree(comments, comment.commentID),
+      }));
+  };
+
+  return buildTree(comments.value, null);
 });
 const props = defineProps({
   post: {
