@@ -1,7 +1,11 @@
 <template>
   <div class="p-4">
+    <!-- Post Statistics -->
     <DonutChart type="donut" :labels="labelsCategory" :data="seriesCategory" />
     <DonutChart type="donut" :labels="labelsStatus" :data="seriesStatus" />
+
+    <!-- Tag Statistics -->
+    
   </div>
 </template>
 

@@ -10,6 +10,7 @@
         :data="items"
         :columns="columns"
         :total-records="totalRecords"
+        @choosePage="refresh"
         @edit-row="showPostDetail"
         @delete-row="deletePost"
       />
@@ -57,7 +58,7 @@ const columns = ref([
 ]);
 
 onMounted(async () => {
-  await refresh();
+  await refresh(1);
 });
 const showPostDetail = (item) => {
   if (item.postID) {
@@ -75,16 +76,16 @@ const deletePost = async (item) => {
   }
 };
 
-const refresh = async () => {
+const refresh = async (page) => {
   try {
     commonFn.showLoading();
     const payload = {
-      columns: ["PostID", "Title", "Content", "Status", "CreatedAt"],
+      page: page,
     };
-    const res = await postApi.getAll(payload);
+    const [res, summary] = await Promise.all([postApi.getPaging(payload),postApi.getSummary(payload)]);
     if (res?.length > 0) {
       items.value = res;
-      totalRecords.value = res.length;
+      totalRecords.value = summary?.total;
     }
   } finally {
     commonFn.hideLoading();

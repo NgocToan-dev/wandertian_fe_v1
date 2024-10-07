@@ -63,7 +63,7 @@
       <fwb-pagination
         :total-pages="totalPages"
         v-model="currentPage"
-        @page-changed="handlePageClick"
+        @page-changed="choosePage"
         previous-label=""
         next-label=""
       >
@@ -106,14 +106,18 @@ const props = defineProps({
     type: Number,
     default: 0,
   },
+  perPage:{
+    type: Number,
+    default: 10
+  }
 });
 
 const currentPage = ref(1);
 const totalPages = computed(() => {
-  return Math.ceil(props.totalRecords / 10);
+  return Math.ceil(props.totalRecords / props.perPage);
 });
 
-const emits = defineEmits(["edit-row", "delete-row"]);
+const emits = defineEmits(["edit-row", "delete-row", "choosePage"]);
 
 const editRow = (record) => {
   emits("edit-row", record);
@@ -123,9 +127,8 @@ const deleteRow = (record) => {
   emits("delete-row", record);
 };
 
-const handlePageClick = (page) => {
-  // get data from api
-  console.log(page);
+const choosePage = () => {
+  emits("choosePage", currentPage.value);
 };
 </script>
 

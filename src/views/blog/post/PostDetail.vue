@@ -83,6 +83,13 @@ const getComments = async () => {
     comments.value = res;
   }
 };
+
+const getRelatedPost = async () => {
+  const res = await postApi.getRelatedPost(post.postID);
+  if (res) {
+    relatedPosts.value = res;
+  }
+};
 </script>
 
 <style lang="scss" scoped></style>
