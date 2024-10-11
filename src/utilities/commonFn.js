@@ -2,6 +2,7 @@ import { useLoading } from "vue-loading-overlay";
 import _resources from "./resources/_resources";
 import _enum from "./enum";
 import moment from "moment";
+import FormatDateType from "./enum/FormatDateType";
 
 const toggleDarkMode = (darkMode) => {
   localStorage.setItem("darkMode", darkMode);
@@ -93,7 +94,15 @@ const hideLoading = () => {
   }
 };
 
-const formatDate = (date) => {
+const formatDate = (date, type) => {
+  switch(type){
+    case FormatDateType.TEXT:
+      return moment(date).format("ll");
+    case FormatDateType.TEXT_TIME:
+      return moment(date).format("LLL");
+    case FormatDateType.TIME:
+      return moment(date).format("HH:mm:ss");
+  }
   return moment(date).format("DD/MM/YYYY");
 }
 
@@ -108,6 +117,10 @@ const getResourceByEnum = (enumName, value) => {
   return resources[enumKey];
 }
 
+const showPostDetail = (proxy, id) => {
+  proxy.$router.push({ name: "postDetail", params: { id: id } });
+};
+
 export default {
   toggleDarkMode,
   logout,
@@ -120,5 +133,6 @@ export default {
   hideLoading,
   checkCookieExpired,
   formatDate,
-  getResourceByEnum
+  getResourceByEnum,
+  showPostDetail
 };

@@ -69,7 +69,6 @@ const config = {
     text-align: left;
     margin: 20px;
     padding: 25px;
-    font-family: sans-serif;
     font-size: 18px;
     color: #428bca;
     background: #f3f3f3;

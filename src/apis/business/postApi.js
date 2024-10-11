@@ -18,6 +18,14 @@ class PostApi extends BusinessApi {
     }
     return await httpClient.postAsync(request);
   }
+
+  async getLatestPosts(payload){
+    const request = {
+      url: `${this.getApiUrl()}/getLatestPosts`,
+      data: payload
+    }
+    return await httpClient.postAsync(request);
+  }
 }
 
 export default new PostApi();

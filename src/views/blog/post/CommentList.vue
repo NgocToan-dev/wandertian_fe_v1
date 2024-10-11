@@ -1,5 +1,8 @@
 <template>
-  <div class="comments border rounded-md p-4 flex flex-col gap-3">
+  <div class="comments flex flex-col gap-2">
+        <!-- Text area comment section -->
+    <CommentInput @post-message="postComment" />
+
     <CommentDetail
       v-for="comment in commentTreeList"
       :key="comment.id"
@@ -8,8 +11,7 @@
       @addReplyToList="addReplyToList"
       @removeCommentReload="removeCommentReload"
     />
-    <!-- Text area comment section -->
-    <CommentInput @post-message="postComment" />
+
   </div>
 </template>
 

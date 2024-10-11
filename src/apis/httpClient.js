@@ -13,10 +13,12 @@ class HttpClient {
       return response.data;
     } catch (ex) {
       // Check if the error is 401
-      if (ex.response.status === 401) {
+      if (ex.response?.status === 401) {
         // Redirect to login page
         window.location.href = "/logout";
+        return;
       }
+      throw ex;
     }
   }
 
@@ -32,10 +34,12 @@ class HttpClient {
       return response.data;
     } catch (ex) {
       // Check if the error is 401
-      if (ex.response.status === 401) {
+      if (ex.response?.status === 401) {
         // Redirect to login page
         window.location.href = "/logout";
+        return;
       }
+      throw ex;
     }
   }
 
@@ -51,10 +55,12 @@ class HttpClient {
       return response.data;
     } catch (ex) {
       // Check if the error is 401
-      if (ex.response.status === 401) {
+      if (ex.response?.status === 401) {
         // Redirect to login page
         window.location.href = "/logout";
+        return;
       }
+      throw ex;
     }
   }
 
@@ -70,10 +76,12 @@ class HttpClient {
       return response.data;
     } catch (ex) {
       // Check if the error is 401
-      if (ex.response.status === 401) {
+      if (ex.response?.status === 401) {
         // Redirect to login page
         window.location.href = "/logout";
+        return;
       }
+      throw ex;
     }
   }
 }

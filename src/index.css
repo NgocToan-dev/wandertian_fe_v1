@@ -4,20 +4,19 @@
 @tailwind utilities;
 
 * {
+  font-family: 'Inter';
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
 body {
-  font-family: "Poppins", sans-serif;
   background-color: #f5f5f5;
   width: 100%;
 }
 h1,h2,h3,h4,h5,h6{
   font-size: revert;
   font-weight: revert;
-  font-family: revert;
 }
 
 .text-overflow {
