@@ -1,13 +1,13 @@
 <template>
-  <div>
-    <fwb-table hoverable>
-      <fwb-table-head class="border-b-2">
+  <div class="h-full flex flex-col">
+    <fwb-table hoverable class="flex-1">
+      <fwb-table-head class="table-head border-b-2">
         <fwb-table-head-cell
           class="select-none"
           :style="{ width: column.width + 'px' }"
           v-for="(column, index) in columns"
           :key="index"
-          :class="{'text-center': ['date', 'enum'].includes(column.dataType)}"
+          :class="{ 'text-center': ['date', 'enum'].includes(column.dataType) }"
         >
           {{ column.name }}
         </fwb-table-head-cell>
@@ -29,15 +29,27 @@
             v-for="(column, index) in columns"
             :key="index"
           >
-            <div v-if="column.enum" class="enum-col select-none rounded-full border-2 p-2 text-center bg-slate-100 dark:bg-inherit">
+            <div
+              v-if="column.enum"
+              class="enum-col select-none rounded-full border-2 p-2 text-center bg-slate-100 dark:bg-inherit"
+            >
               {{ commonFn.getResourceByEnum(column.enum, item[column.key]) }}
             </div>
-            <div v-else-if="column.html" v-html="item[column.key]" class="select-none text-overflow"></div>
-            <div v-else-if="column.dataType == 'date'" class="select-none text-center">{{ commonFn.formatDate(item[column.key]) }}</div>
+            <div
+              v-else-if="column.html"
+              v-html="item[column.key]"
+              class="select-none text-overflow"
+            ></div>
+            <div v-else-if="column.dataType == 'date'" class="select-none text-center">
+              {{ commonFn.formatDate(item[column.key]) }}
+            </div>
             <div v-else class="select-none">{{ item[column.key] }}</div>
           </fwb-table-cell>
-          <fwb-table-cell class="w-10 sticky right-0 bg-gray-100 dark:bg-inherit" v-if="data.length > 0">
-            <div class="flex justify-center gap-2 ">
+          <fwb-table-cell
+            class="w-10 sticky right-0 bg-gray-100 dark:bg-inherit"
+            v-if="data.length > 0"
+          >
+            <div class="flex justify-center gap-2">
               <Icon
                 @click="editRow(item)"
                 icon="mdi:pencil"
@@ -106,10 +118,10 @@ const props = defineProps({
     type: Number,
     default: 0,
   },
-  perPage:{
+  perPage: {
     type: Number,
-    default: 10
-  }
+    default: 10,
+  },
 });
 
 const currentPage = ref(1);
@@ -133,5 +145,10 @@ const choosePage = () => {
 </script>
 
 <style lang="scss" scoped>
-
+.table-head {
+  position: sticky;
+  top: 0;
+  background: #fff;
+  z-index: 100;
+}
 </style>

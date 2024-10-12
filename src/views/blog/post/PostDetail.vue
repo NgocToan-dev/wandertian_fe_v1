@@ -4,11 +4,18 @@
       <div class="flex-1">
         <!-- Time, Author created -->
         <div class="flex gap-2 mb-2 items-center text-gray-400 dark:text-gray-500">
-          <div>By <span class="text-black">{{ post.userID }}</span></div>
+          <div>
+            By <span class="text-black">{{ post.userID }}</span>
+          </div>
           <div class="rounded-full bg-gray-400 w-1.5 h-1.5"></div>
           <div>{{ commonFn.formatDate(post.created, FormatDateType.TEXT_TIME) }}</div>
         </div>
-        <img :src="post.thumbnail" v-if="post.thumbnail" alt="news" class="w-full h-full object-cover" />
+        <img
+          :src="post.thumbnail"
+          v-if="post.thumbnail"
+          alt="news"
+          class="w-full h-full object-cover"
+        />
         <div class="flex flex-col gap-2">
           <h1 class="text-gray-900 dark:text-white">
             {{ post.title }}
@@ -26,7 +33,7 @@
           <comment-list v-model="comments" :post="post" />
         </div>
       </div>
-      <div class="w-96 flex flex-col gap-4 sticky">
+      <div class="w-96 flex flex-col gap-4">
         <!-- Related Tag -->
         <div class="related-tag">
           <h2 class="text-gray-900 dark:text-white">Related Tag</h2>
@@ -34,8 +41,9 @@
             <!-- list tags -->
             <div v-for="tag in post.tags" :key="tag.tagID" class="tag">
               <span
-                class="select-none cursor-pointer text-sm hover:bg-slate-50 hover:dark:bg-slate-600 text-gray-900 dark:text-white border rounded-full p-2">#{{
-                  tag.tagName }}</span>
+                class="select-none cursor-pointer text-sm hover:bg-slate-50 hover:dark:bg-slate-600 text-gray-900 dark:text-white border rounded-full p-2"
+                >#{{ tag.tagName }}</span
+              >
             </div>
           </div>
         </div>
@@ -44,24 +52,33 @@
           <h2 class="text-gray-900 dark:text-white">Latest News</h2>
           <div class="flex flex-wrap gap-2 mt-2">
             <!-- list news -->
-            <div img-alt="Desk" variant="horizontal" class="max-h-40 flex items-start gap-2"
-              v-for="(post, index) in latestPosts" :key="index">
+            <div
+              img-alt="Desk"
+              variant="horizontal"
+              class="max-h-40 flex items-start gap-2"
+              v-for="(post, index) in latestPosts"
+              :key="index"
+            >
               <div class="w-1/3 h-full">
                 <div v-if="post.thumbnail" class="rounded-md overflow-hidden">
-                  <img src="https://flowbite.com/docs/images/blog/image-4.jpg" alt="">
+                  <img src="https://flowbite.com/docs/images/blog/image-4.jpg" alt="" />
                 </div>
-                <div v-else
-                  class="flex items-center justify-center h-full max-w-sm bg-gray-300 rounded-lg animate-pulse dark:bg-gray-700">
-                </div>
+                <div
+                  v-else
+                  class="flex items-center justify-center h-full max-w-sm bg-gray-300 rounded-lg animate-pulse dark:bg-gray-700"
+                ></div>
               </div>
               <div class="w-2/3 flex flex-col flex-between h-full">
                 <h3
                   class="mb-2 font-bold tracking-tight text-gray-900 dark:text-white text-overflow hover:underline hover:text-blue-500 cursor-pointer"
-                  @click="commonFn.showPostDetail(this, post.postID)">
+                  @click="showPostDetail(post.postID)"
+                >
                   {{ post.title }}
                 </h3>
-                <p class="text-gray-700 dark:text-gray-400 text-overflow" v-html="post.content">
-                </p>
+                <p
+                  class="text-gray-700 dark:text-gray-400 text-overflow"
+                  v-html="post.content"
+                ></p>
               </div>
             </div>
           </div>
@@ -76,20 +93,19 @@
 </template>
 
 <script setup>
-import { onMounted, ref, computed, onBeforeMount } from "vue";
+import { onMounted, ref, computed, onBeforeMount, getCurrentInstance } from "vue";
 import postApi from "@/apis/business/postApi";
-import { onBeforeRouteUpdate, useRoute } from "vue-router";
-import { reactive } from "vue";
+import { useRoute } from "vue-router";
 import CommentList from "./CommentList.vue";
 import { FwbButton, FwbCard } from "flowbite-vue";
 import RelatedPost from "./RelatedPost.vue";
 import commentApi from "@/apis/business/commentApi";
 import commonFn from "@/utilities/commonFn";
 import FormatDateType from "@/utilities/enum/FormatDateType";
-import {Icon} from "@iconify/vue";
 
+const { proxy } = getCurrentInstance();
 const route = useRoute();
-const post = reactive({});
+const post = ref({});
 const comments = ref([]);
 const relatedPosts = ref([]);
 const latestPosts = ref([]);
@@ -102,11 +118,9 @@ onMounted(async () => {
   await initPostData();
 });
 
-onBeforeRouteUpdate(async (to) => {
-  if(post?.postID != to.params.id){
-    await initPostData();
-  }
-})
+const showPostDetail = (postID) => {
+  window.location.href = `/post/${postID}`;
+};
 
 const initPostData = async () => {
   const postID = route.params.id;
@@ -115,12 +129,11 @@ const initPostData = async () => {
     const postRaw = res.post;
     // change all date to format date time
     postRaw.tags = res.tags;
-    Object.assign(post, postRaw);
+    post.value = postRaw;
   }
   await getComments();
   await getLatestPosts(4);
-}
-
+};
 
 const getComments = async () => {
   const postID = route.params.id;
@@ -131,7 +144,7 @@ const getComments = async () => {
 };
 
 const getRelatedPost = async () => {
-  const res = await postApi.getRelatedPost(post.postID);
+  const res = await postApi.getRelatedPost(post.value.postID);
   if (res) {
     relatedPosts.value = res;
   }
@@ -139,9 +152,9 @@ const getRelatedPost = async () => {
 
 const getLatestPosts = async (numberOfPosts) => {
   const payload = {
-    currentPostID: post.postID,
-    numberOfPosts: numberOfPosts
-  }
+    currentPostID: post.value.postID,
+    numberOfPosts: numberOfPosts,
+  };
   const res = await postApi.getLatestPosts(payload);
   if (res) {
     latestPosts.value = res;

@@ -1,11 +1,11 @@
 <template>
-  <div class="p-4">
-    <div class="toolbar flex justify-end">
+  <div class="p-4 flex flex-col max-h-full">
+    <div class="toolbar flex justify-end h-9">
       <FwbButton class="dark:bg-gray-700 dark:text-white" @click="showPostDetail"
         >Add Post</FwbButton
       >
     </div>
-    <div class="task-list mt-2">
+    <div class="task-list mt-2 flex-1 overflow-auto">
       <GridViewer
         :data="items"
         :columns="columns"
