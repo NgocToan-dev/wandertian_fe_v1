@@ -5,7 +5,7 @@
         <div class="flex items-center justify-between">
           <div class="flex items-center gap-2">
             <img src="https://i.pravatar.cc/300" alt="avatar" class="w-10 h-10 rounded-full" />
-            <h3 class="text-gray-900 dark:text-white">{{ comment.username }}</h3>
+            <h3 class="text-gray-900 dark:text-white">{{ comment.fullName }}</h3>
             <span class="text-gray-400 dark:text-gray-500 flex gap-2 items-center">{{
               commonFn.formatDate(comment.createdAt, FormatDateType.TEXT) }}
             </span>

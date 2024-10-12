@@ -5,10 +5,14 @@
         <!-- Time, Author created -->
         <div class="flex gap-2 mb-2 items-center text-gray-400 dark:text-gray-500">
           <div>
-            By <span class="text-black">{{ post.userID }}</span>
+            By <span class="text-black">{{ post.fullName }}</span>
           </div>
           <div class="rounded-full bg-gray-400 w-1.5 h-1.5"></div>
           <div>{{ commonFn.formatDate(post.created, FormatDateType.TEXT_TIME) }}</div>
+          <!-- if save show star icon -->
+          <div v-if="isSave" class="ml-2">
+            <Icon icon="mdi:bookmark" class="text-blue-500 dark:text-blue-400 text-2xl" />
+          </div>
         </div>
         <img
           :src="post.thumbnail"
@@ -23,9 +27,55 @@
           <rich-editor v-model="post.content" readOnly />
         </div>
         <!-- Like, Share and Social Media -->
-        <div class="flex gap-2 mt-5">
-          <FwbButton variant="primary">Like</FwbButton>
-          <FwbButton variant="primary">Share</FwbButton>
+        <div class="flex justify-between mt-5">
+          <div class="reaction flex items-center gap-4">
+            <!-- reaction -->
+            <div
+              class="like cursor-pointer hover:bg-slate-100 rounded-md"
+              @click="isLike = !isLike"
+            >
+              <Icon
+                v-if="isLike"
+                icon="mdi:thumb-up"
+                class="text-blue-500 dark:text-blue-400 text-2xl"
+              />
+              <Icon
+                v-else
+                icon="mdi:thumb-up-outline"
+                class="text-gray-400 dark:text-gray-500 text-2xl"
+              />
+            </div>
+            <!-- save post -->
+            <div
+              class="savePost cursor-pointer hover:bg-slate-100 rounded-md"
+              @click="isSave = !isSave"
+            >
+              <Icon
+                v-if="isSave"
+                icon="mdi:bookmark"
+                class="text-blue-500 dark:text-blue-400 text-2xl"
+              />
+              <Icon
+                v-else
+                icon="mdi:bookmark-outline"
+                class="text-gray-400 dark:text-gray-500 text-2xl"
+              />
+            </div>
+          </div>
+          <div class="flex gap-2 share-to-social">
+            <div
+              class="cursor-pointer p-1 text-gray-500 hover:bg-slate-100 rounded-md"
+              v-for="item in socialMedial"
+              :key="item.icon"
+            >
+              <FwbTooltip placement="top">
+                <template #trigger>
+                  <Icon :icon="item.icon" class="text-2xl" />
+                </template>
+                <template #content class="text-sm"> {{ item.tooltip }} </template>
+              </FwbTooltip>
+            </div>
+          </div>
         </div>
         <!-- Comment -->
         <div class="comment mt-5">
@@ -97,18 +147,27 @@ import { onMounted, ref, computed, onBeforeMount, getCurrentInstance } from "vue
 import postApi from "@/apis/business/postApi";
 import { useRoute } from "vue-router";
 import CommentList from "./CommentList.vue";
-import { FwbButton, FwbCard } from "flowbite-vue";
+import { FwbButton, FwbCard, FwbTooltip } from "flowbite-vue";
 import RelatedPost from "./RelatedPost.vue";
 import commentApi from "@/apis/business/commentApi";
 import commonFn from "@/utilities/commonFn";
 import FormatDateType from "@/utilities/enum/FormatDateType";
+import { Icon } from "@iconify/vue";
 
-const { proxy } = getCurrentInstance();
 const route = useRoute();
 const post = ref({});
 const comments = ref([]);
 const relatedPosts = ref([]);
 const latestPosts = ref([]);
+const isLike = ref(false);
+const isSave = ref(false);
+
+const socialMedial = [
+  { icon: "mdi:facebook", tooltip: "Share on Facebook" },
+  { icon: "mdi:twitter", tooltip: "Share on Twitter" },
+  { icon: "mdi:instagram", tooltip: "Share on Instagram" },
+  { icon: "mdi:linkedin", tooltip: "Share on LinkedIn" },
+];
 
 const totalComments = computed(() => {
   return comments.value.length;

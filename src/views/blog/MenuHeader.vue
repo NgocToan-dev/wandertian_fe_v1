@@ -23,11 +23,42 @@
           <ToggleDarkMode />
           <!-- login, logout button -->
           <fwb-button v-if="!isLogin" @click="login">Login</fwb-button>
-          <fwb-button v-else @click="logout">Logout</fwb-button>
+          <FwbDropdown v-else placement="bottom" align-to-end>
+            <template #trigger>
+              <!-- user avatar -->
+              <img
+                src="https://i.pravatar.cc/300"
+                alt="User avatar"
+                class="w-8 h-8 rounded-full cursor-pointer hover:opacity-75"
+              />
+            </template>
+            <ul>
+              <ul
+                class="py-2 text-sm text-gray-700 dark:text-gray-200"
+                aria-labelledby="dropdownInformdropdownAvatarNameButtonationButton"
+              >
+                <li @click="showUserSetting">
+                  <a
+                    href="#"
+                    class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                    >Settings
+                  </a>
+                </li>
+              </ul>
+              <div class="py-2" @click="logout">
+                <a
+                  href="#"
+                  class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+                  >Log out</a
+                >
+              </div>
+            </ul>
+          </FwbDropdown>
         </div>
       </fwb-navbar-collapse>
     </template>
   </fwb-navbar>
+  <UserAccountSetting v-if="isShowUserSetting" @closeModal="closeUserSetting"/>
 </template>
 
 <script setup>
@@ -37,13 +68,23 @@ import {
   FwbNavbarCollapse,
   FwbNavbarLink,
   FwbButton,
+  FwbDropdown,
 } from "flowbite-vue";
 import ToggleDarkMode from "@/components/button/ToggleDarkMode.vue";
 import { computed, onMounted, ref, watch } from "vue";
 import { useRouter } from "vue-router";
 import commonFn from "@/utilities/commonFn";
 import RoleEnum from "@/utilities/enum/RoleEnum";
+import UserAccountSetting from "./UserAccountSetting.vue";
 
+const isShowUserSetting = ref(false);
+
+const showUserSetting = () => {
+  isShowUserSetting.value = true;
+};
+const closeUserSetting = () => {
+  isShowUserSetting.value = false;
+};
 const isLogin = computed(() => {
   return commonFn.getCookie("accessToken") != null;
 });

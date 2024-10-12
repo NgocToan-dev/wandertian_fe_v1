@@ -149,6 +149,6 @@ const choosePage = () => {
   position: sticky;
   top: 0;
   background: #fff;
-  z-index: 100;
+  z-index: 10;
 }
 </style>
