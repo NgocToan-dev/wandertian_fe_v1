@@ -26,6 +26,13 @@ class PostApi extends BusinessApi {
     }
     return await httpClient.postAsync(request);
   }
+
+  async getAllPostMonthYears(){
+    const request = {
+      url: `${this.getApiUrl()}/getAllPostMonthYears`,
+    }
+    return await httpClient.getAsync(request);
+  }
 }
 
 export default new PostApi();

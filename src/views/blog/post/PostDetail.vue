@@ -31,7 +31,7 @@
           <div class="reaction flex items-center gap-4">
             <!-- reaction -->
             <div
-              class="like cursor-pointer hover:bg-slate-100 rounded-md"
+              class="like cursor-pointer p-1 hover:bg-slate-100 rounded-md"
               @click="isLike = !isLike"
             >
               <Icon
@@ -47,7 +47,7 @@
             </div>
             <!-- save post -->
             <div
-              class="savePost cursor-pointer hover:bg-slate-100 rounded-md"
+              class="savePost cursor-pointer p-1 hover:bg-slate-100 rounded-md"
               @click="isSave = !isSave"
             >
               <Icon

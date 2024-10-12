@@ -12,8 +12,7 @@
           <FwbInput
             label="Title"
             class="flex-1"
-            v-model="model.name"
-            @blur="validateField('name')"
+            v-model="model.categoryName"
           >
             <template #validationMessage>
               <div v-if="errors.name" class="text-red-500">{{ errors.name }}</div>
@@ -88,7 +87,7 @@ const save = async () => {
 };
 
 const validateField = (fieldName) => {
-  if (fieldName === "name" && !model.value.name) {
+  if (fieldName === "categoryName" && !model.value.categoryName) {
     errors.value.name = "Category name is required";
   } else {
     errors.value.name = "";
@@ -97,7 +96,7 @@ const validateField = (fieldName) => {
 };
 
 const validateAllFields = () => {
-  validateField("name");
+  validateField("categoryName");
   // Add validation calls for other fields
 };
 </script>

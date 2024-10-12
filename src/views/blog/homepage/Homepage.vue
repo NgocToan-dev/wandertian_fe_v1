@@ -1,7 +1,35 @@
 <template>
   <!-- homepage of blog main content -->
-  <div class="container mx-auto p-4">
-    <div class="grid grid-cols-12 gap-5">
+  <div class="container mx-auto p-4 bg-gray-50">
+    <!-- category -->
+    <div class="category">
+      <div class="flex justify-between border-b-2 pb-5 items-center">
+        <div class="text-2xl font-bold text-gray-900 dark:text-white">Top Categories</div>
+        <div class="flex gap-2 items-center">
+          <fwb-button color="alternative"
+            >View All
+            <template #suffix>
+              <Icon icon="mdi:arrow-right" class="text-gray-400 dark:text-gray-500" />
+            </template>
+          </fwb-button>
+        </div>
+      </div>
+      <div class="flex flex-wrap justify-around w-full mt-5">
+        <div
+          class="flex flex-col justify-center items-center col-3 hover:underline cursor-pointer gap-2"
+          v-for="category in categories"
+        >
+          <div class="rounded-full p-4 border bg-white hover:bg-slate-100">
+            <Icon :icon="`mdi:${category.icon}`" class="text-4xl text-gray-400" />
+          </div>
+          <p class="text-gray-900 dark:text-white">{{ category.categoryName }}</p>
+        </div>
+      </div>
+    </div>
+    <div class="text-2xl mt-12">
+      <span class="font-bold text-gray-900 dark:text-white">Latest Posts</span>
+    </div>
+    <div class="grid grid-cols-12 gap-5 mt-2">
       <div class="col-span-8">
         <div class="flex flex-wrap gap-5">
           <!-- main content -->
@@ -53,6 +81,37 @@
         </div>
       </div>
       <div class="col-span-4 flex flex-col gap-5 items-end">
+        <!-- avatar -->
+        <fwb-card variant="image" class="w-full">
+          <div class="p-5 flex flex-col gap-2 items-center justify-center">
+            <p class="text-gray-900 dark:text-white">About Me</p>
+            <FwbAvatar size="lg" img="/src/assets/images/avatar.png" rounded />
+            <p class="text-gray-900 dark:text-white">Welcome to Wandertian!</p>
+            <p class="text-gray-400 dark:text-gray-500 text-sm text-center">
+              I’m Toản, a web developer blending my love for coding, traveling, reading,
+              and learning languages. Here, you'll find me wandering through the worlds of
+              tech and adventure—sometimes getting lost (both in code and in cities), but
+              always discovering something new. Join me for travel tips, book
+              recommendations, and a few programming stories that might just make you
+              laugh!
+            </p>
+            <!-- social media -->
+            <div class="flex gap-2 mt-2">
+              <div class="cursor-pointer hover:bg-slate-100 p-1 rounded-md">
+                <Icon
+                  icon="mdi:facebook"
+                  class="text-2xl text-gray-500 dark:text-white"
+                />
+              </div>
+              <div class="cursor-pointer hover:bg-slate-100 p-1 rounded-md">
+                <Icon
+                  icon="mdi:instagram"
+                  class="text-2xl text-gray-500 dark:text-white"
+                />
+              </div>
+            </div>
+          </div>
+        </fwb-card>
         <!-- search news -->
         <fwb-card variant="image" class="w-full">
           <div class="p-5 flex flex-col gap-2">
@@ -86,16 +145,33 @@
             </fwb-input>
           </div>
         </fwb-card>
+        <!-- list month years of all posts -->
+        <fwb-card variant="image" class="w-full">
+          <div class="p-5 flex flex-col gap-2">
+            <p class="text-gray-900 dark:text-white">Archive</p>
+            <div class="flex flex-col gap-2">
+              <div
+                class="flex cursor-pointer text-gray-400 dark:text-gray-500 w-fit hover:underline"
+                v-for="(item, index) in listMonthYears"
+                :key="index"
+              >
+                {{ item.month }} - {{ item.year }}
+              </div>
+            </div>
+          </div>
+        </fwb-card>
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
+import categoryApi from "@/apis/business/categoryApi";
 import postApi from "@/apis/business/postApi";
 import commonFn from "@/utilities/commonFn";
 import PostStatusEnum from "@/utilities/enum/PostStatusEnum";
-import { FwbCard, FwbInput, FwbButton, FwbPagination } from "flowbite-vue";
+import { Icon } from "@iconify/vue";
+import { FwbCard, FwbInput, FwbButton, FwbPagination, FwbAvatar } from "flowbite-vue";
 import { onMounted, ref } from "vue";
 import { getCurrentInstance } from "vue";
 const { proxy } = getCurrentInstance();
@@ -105,10 +181,36 @@ const totalRecords = ref(0);
 const recordsPerPage = 10;
 const currentPage = ref(1);
 const searchNewsText = ref("");
+const categories = ref([]);
+const listMonthYears = ref([]);
 
 onMounted(async () => {
   await choosePage(1);
+  await getCategories();
+  await getMonthYears();
 });
+const getMonthYears = async () => {
+  try {
+    commonFn.showLoading();
+    const res = await postApi.getAllPostMonthYears();
+    if (res) {
+      listMonthYears.value = res;
+    }
+  } finally {
+    commonFn.hideLoading();
+  }
+};
+const getCategories = async () => {
+  try {
+    commonFn.showLoading();
+    const res = await categoryApi.getAll({});
+    if (res) {
+      categories.value = res;
+    }
+  } finally {
+    commonFn.hideLoading();
+  }
+};
 const choosePage = async (page) => {
   try {
     commonFn.showLoading();
