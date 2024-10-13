@@ -1,6 +1,6 @@
 <template>
   <!-- homepage of blog main content -->
-  <div class="container mx-auto p-4 bg-gray-50">
+  <div class="container p-4 mx-auto">
     <!-- category -->
     <div class="category">
       <div class="flex justify-between border-b-2 pb-5 items-center">
@@ -34,15 +34,15 @@
         <div class="flex flex-wrap gap-5">
           <!-- main content -->
           <fwb-card
-            variant="horizontal"
+            variant="image"
             v-for="(news, index) in listNews"
             :key="index"
             @click.prevent="goToDetail(news.postID)"
-            class="min-w-full"
+            class="min-w-full h-44"
           >
             <div class="flex">
               <!-- image -->
-              <div class="w-1/3">
+              <div class="w-1/3 h-full">
                 <img
                   v-if="news.img"
                   :src="news.img"
@@ -51,7 +51,7 @@
                 />
                 <div
                   v-else
-                  class="flex items-center justify-center h-56 max-w-sm bg-gray-300 rounded-lg animate-pulse dark:bg-gray-700"
+                  class="flex items-center justify-center h-44 max-w-sm bg-gray-300 rounded-lg animate-pulse dark:bg-gray-700"
                 ></div>
               </div>
               <div class="flex-1 p-5">
@@ -245,5 +245,8 @@ const goToDetail = (id) => {
 :disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+.text-overflow {
+  -webkit-line-clamp: 4;
 }
 </style>

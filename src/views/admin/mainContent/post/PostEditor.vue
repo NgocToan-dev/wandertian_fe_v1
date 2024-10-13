@@ -219,6 +219,7 @@ const save = async () => {
       post: {
         ...model,
         userID: user.userID,
+        fullName: user.fullName,
         thumbnail: model.thumbnail ? thumbnailBase64.value : null,
         categoryName: categoryName,
       },

@@ -8,7 +8,7 @@
             By <span class="text-black">{{ post.fullName }}</span>
           </div>
           <div class="rounded-full bg-gray-400 w-1.5 h-1.5"></div>
-          <div>{{ commonFn.formatDate(post.created, FormatDateType.TEXT_TIME) }}</div>
+          <div>{{ commonFn.formatDate(post.createdAt, FormatDateType.TEXT_TIME) }}</div>
           <!-- if save show star icon -->
           <div v-if="isSave" class="ml-2">
             <Icon icon="mdi:bookmark" class="text-blue-500 dark:text-blue-400 text-2xl" />
