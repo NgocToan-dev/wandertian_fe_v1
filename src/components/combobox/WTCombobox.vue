@@ -3,11 +3,11 @@
     <span class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{
       label
     }}</span>
-    <FwbDropdown close-inside>
+    <FwbDropdown close-inside class="dropdown w-full">
       <template #trigger>
-        <div class="border rounded-md p-2 bg-white dark:bg-inherit">
+        <div class="border rounded-md p-2 bg-white dark:bg-inherit w-full">
           <!-- multiple choice -->
-          <div class="list-items flex flex-wrap">
+          <div class="list-items flex flex-wrap w-full">
             <div
               v-for="item in selectedItems"
               :key="item[valueField]"
@@ -22,11 +22,11 @@
           <input
             type="text"
             v-model="searchValue"
-            class="border-none outline-none ring-0 bg-inherit h-7"
+            class="border-none outline-none ring-0 bg-inherit h-7 w-full"
           />
         </div>
       </template>
-      <FwbListGroup>
+      <FwbListGroup class="w-full">
         <FwbListGroupItem
           v-for="item in filterData"
           :key="item[valueField]"
@@ -105,4 +105,10 @@ const chooseItem = (item) => {
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss">
+.dropdown{
+  >div{
+    width: 100%;
+  }
+}
+</style>
