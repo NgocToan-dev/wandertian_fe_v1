@@ -56,7 +56,6 @@ const buildChart = (type, labels, data) => {
 watch(
   () => JSON.stringify({ labels: props.labels, data: props.data }),
   (newVal) => {
-    debugger;
     const { labels, data } = JSON.parse(newVal);
     buildChart(props.type, labels, data);
   }

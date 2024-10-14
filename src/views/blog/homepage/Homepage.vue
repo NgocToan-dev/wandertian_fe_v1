@@ -18,6 +18,7 @@
         <div
           class="flex flex-col justify-center items-center col-3 hover:underline cursor-pointer gap-2"
           v-for="category in categories"
+          @click="showPostByCategory(category.categoryName)"
         >
           <div class="rounded-full p-4 border bg-white hover:bg-slate-100">
             <Icon :icon="`mdi:${category.icon}`" class="text-4xl text-gray-400" />
@@ -31,11 +32,11 @@
     </div>
     <div class="grid grid-cols-12 gap-5 mt-2">
       <div class="col-span-8">
-        <div class="flex flex-wrap gap-5">
+        <div v-if="posts.length > 0" class="flex flex-wrap gap-5">
           <!-- main content -->
           <fwb-card
             variant="image"
-            v-for="(news, index) in listNews"
+            v-for="(news, index) in posts"
             :key="index"
             @click.prevent="goToDetail(news.postID)"
             class="min-w-full h-44"
@@ -67,6 +68,41 @@
               </div>
             </div>
           </fwb-card>
+        </div>
+        <div v-else>
+          <div class="flex flex-col gap-5">
+            <div
+              v-for="index in 5"
+              class="w-full px-3 py-2 h-44 flex justify-start items-center shadow rounded-md"
+            >
+              <div role="status" class="w-full animate-pulse">
+                <div
+                  class="h-2.5 bg-gray-200 rounded-full dark:bg-gray-700 w-80 mb-4"
+                ></div>
+                <div
+                  class="h-2 bg-gray-200 rounded-full dark:bg-gray-700 mb-2.5"
+                  style="width: 80%"
+                ></div>
+                <div
+                  class="h-2 bg-gray-200 rounded-full dark:bg-gray-700 mb-2.5"
+                  style="width: 70%"
+                ></div>
+                <div
+                  class="h-2 bg-gray-200 rounded-full dark:bg-gray-700 mb-2.5"
+                  style="width: 90%"
+                ></div>
+                <div
+                  class="h-2 bg-gray-200 rounded-full dark:bg-gray-700 mb-2.5"
+                  style="width: 60%"
+                ></div>
+                <div
+                  class="h-2 bg-gray-200 rounded-full dark:bg-gray-700"
+                  style="width: 50%"
+                ></div>
+                <span class="sr-only">Loading...</span>
+              </div>
+            </div>
+          </div>
         </div>
         <!-- Paging -->
         <div class="mt-5 flex justify-center gap-2">
@@ -118,7 +154,7 @@
             <p class="text-gray-900 dark:text-white">Search News</p>
             <fwb-input
               v-model="searchNewsText"
-              placeholder="enter your news title"
+              placeholder="search post"
               size="lg"
               @keyup.enter="choosePage(currentPage)"
             >
@@ -176,7 +212,7 @@ import { onMounted, ref } from "vue";
 import { getCurrentInstance } from "vue";
 const { proxy } = getCurrentInstance();
 
-const listNews = ref([]);
+const posts = ref([]);
 const totalRecords = ref(0);
 const recordsPerPage = 10;
 const currentPage = ref(1);
@@ -228,7 +264,7 @@ const choosePage = async (page) => {
       postApi.getSummary(payload),
     ]);
     if (res) {
-      listNews.value = res;
+      posts.value = res;
       totalRecords.value = summary.total;
     }
   } finally {
@@ -238,6 +274,9 @@ const choosePage = async (page) => {
 
 const goToDetail = (id) => {
   commonFn.showPostDetail(proxy, id);
+};
+const showPostByCategory = (categoryName) => {
+  proxy.$router.push({ name: "searchPage", query: { categoryName: categoryName } });
 };
 </script>
 
