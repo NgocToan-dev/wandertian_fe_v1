@@ -16,7 +16,7 @@
         <div v-for="(post, index) in posts" :key="index">
           <FwbCard
             variant="image"
-            @click.prevent="goToDetail(post.postID)"
+            @click.prevent="commonFn.showPostDetail(this, post.postID)"
             class="max-w-80 h-96"
           >
             <div class="flex flex-col">
@@ -53,7 +53,7 @@
         </div>
       </div>
       <!-- pagination -->
-      <div class="mt-5 flex justify-center gap-2">
+      <div class="mt-5 flex justify-center gap-2" v-if="recordsPerPage > 0">
         <FwbPagination
           v-model="currentPage"
           @page-changed="choosePage"
@@ -76,7 +76,8 @@ import { getCurrentInstance, onMounted, ref } from "vue";
 const { proxy } = getCurrentInstance();
 const posts = ref([]);
 const categoryName = ref("");
-const recordsPerPage = 10;
+const tagID = ref("");
+const recordsPerPage = ref(10);
 const currentPage = ref(1);
 const totalRecords = ref(0);
 
@@ -84,6 +85,10 @@ onMounted(async () => {
   categoryName.value = proxy.$route.query.categoryName;
   if (categoryName.value) {
     await getPostsByCategory();
+  }
+  tagID.value = proxy.$route.query.tagID;
+  if (tagID.value) {
+    await getPostsByTag(tagID.value);
   }
 });
 const getPostsByCategory = async () => {
@@ -98,7 +103,7 @@ const getPostsByCategory = async () => {
     const payload = {
       filters,
       page: currentPage.value,
-      pageSize: recordsPerPage,
+      pageSize: recordsPerPage.value,
     };
     const [res, summary] = await Promise.all([
       postApi.getPaging(payload),
@@ -114,6 +119,21 @@ const getPostsByCategory = async () => {
     commonFn.hideLoading();
   }
 };
+
+const getPostsByTag = async (tagID) =>{
+  try {
+    commonFn.showLoading();
+    const res = await postApi.getPostByTag(tagID);
+    if (res) {
+      posts.value = res;
+      recordsPerPage.value = -1;
+    }
+  } catch (error) {
+    console.log(error);
+  } finally {
+    commonFn.hideLoading();
+  }
+}
 
 const choosePage = async (page) => {
   currentPage.value = page;

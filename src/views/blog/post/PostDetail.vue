@@ -14,12 +14,7 @@
             <Icon icon="mdi:bookmark" class="text-blue-500 dark:text-blue-400 text-2xl" />
           </div>
         </div>
-        <img
-          :src="post.thumbnail"
-          v-if="post.thumbnail"
-          alt="news"
-          class="w-full h-full object-cover"
-        />
+        <img :src="post.thumbnail" v-if="post.thumbnail" alt="news" class="w-full h-full object-cover" />
         <div class="flex flex-col gap-2">
           <h1 class="text-gray-900 dark:text-white">
             {{ post.title }}
@@ -30,44 +25,19 @@
         <div class="flex justify-between mt-5">
           <div class="reaction flex items-center gap-4">
             <!-- reaction -->
-            <div
-              class="like cursor-pointer p-1 hover:bg-slate-100 rounded-md"
-              @click="isLike = !isLike"
-            >
-              <Icon
-                v-if="isLike"
-                icon="mdi:thumb-up"
-                class="text-blue-500 dark:text-blue-400 text-2xl"
-              />
-              <Icon
-                v-else
-                icon="mdi:thumb-up-outline"
-                class="text-gray-400 dark:text-gray-500 text-2xl"
-              />
+            <div class="like cursor-pointer p-1 hover:bg-slate-100 rounded-md" @click="isLike = !isLike">
+              <Icon v-if="isLike" icon="mdi:thumb-up" class="text-blue-500 dark:text-blue-400 text-2xl" />
+              <Icon v-else icon="mdi:thumb-up-outline" class="text-gray-400 dark:text-gray-500 text-2xl" />
             </div>
             <!-- save post -->
-            <div
-              class="savePost cursor-pointer p-1 hover:bg-slate-100 rounded-md"
-              @click="isSave = !isSave"
-            >
-              <Icon
-                v-if="isSave"
-                icon="mdi:bookmark"
-                class="text-blue-500 dark:text-blue-400 text-2xl"
-              />
-              <Icon
-                v-else
-                icon="mdi:bookmark-outline"
-                class="text-gray-400 dark:text-gray-500 text-2xl"
-              />
+            <div class="savePost cursor-pointer p-1 hover:bg-slate-100 rounded-md" @click="isSave = !isSave">
+              <Icon v-if="isSave" icon="mdi:bookmark" class="text-blue-500 dark:text-blue-400 text-2xl" />
+              <Icon v-else icon="mdi:bookmark-outline" class="text-gray-400 dark:text-gray-500 text-2xl" />
             </div>
           </div>
           <div class="flex gap-2 share-to-social">
-            <div
-              class="cursor-pointer p-1 text-gray-500 hover:bg-slate-100 rounded-md"
-              v-for="item in socialMedial"
-              :key="item.icon"
-            >
+            <div class="cursor-pointer p-1 text-gray-500 hover:bg-slate-100 rounded-md" v-for="item in socialMedial"
+              :key="item.icon">
               <FwbTooltip placement="top">
                 <template #trigger>
                   <Icon :icon="item.icon" class="text-2xl" />
@@ -89,11 +59,10 @@
           <h2 class="text-gray-900 dark:text-white">Related Tag</h2>
           <div class="flex flex-wrap gap-2 mt-2">
             <!-- list tags -->
-            <div v-for="tag in post.tags" :key="tag.tagID" class="tag">
+            <div v-for="tag in post.tags" :key="tag.tagID" class="tag" @click="showPostsByTag(tag.tagID)">
               <span
-                class="select-none cursor-pointer text-sm hover:bg-slate-50 hover:dark:bg-slate-600 text-gray-900 dark:text-white border rounded-full p-2"
-                >#{{ tag.tagName }}</span
-              >
+                class="select-none cursor-pointer text-sm hover:bg-slate-50 hover:dark:bg-slate-600 text-gray-900 dark:text-white border rounded-full p-2">#{{
+                  tag.tagName }}</span>
             </div>
           </div>
         </div>
@@ -102,33 +71,23 @@
           <h2 class="text-gray-900 dark:text-white">Latest News</h2>
           <div class="flex flex-wrap gap-2 mt-2">
             <!-- list news -->
-            <div
-              img-alt="Desk"
-              variant="horizontal"
-              class="max-h-40 flex items-start gap-2"
-              v-for="(post, index) in latestPosts"
-              :key="index"
-            >
+            <div img-alt="Desk" variant="horizontal" class="max-h-40 flex items-start gap-2"
+              v-for="(post, index) in latestPosts" :key="index">
               <div class="w-1/3 h-full">
                 <div v-if="post.thumbnail" class="rounded-md overflow-hidden">
                   <img src="https://flowbite.com/docs/images/blog/image-4.jpg" alt="" />
                 </div>
-                <div
-                  v-else
-                  class="flex items-center justify-center h-full max-w-sm bg-gray-300 rounded-lg animate-pulse dark:bg-gray-700"
-                ></div>
+                <div v-else
+                  class="flex items-center justify-center h-full max-w-sm bg-gray-300 rounded-lg animate-pulse dark:bg-gray-700">
+                </div>
               </div>
               <div class="w-2/3 flex flex-col flex-between h-full">
                 <h3
                   class="mb-2 font-bold tracking-tight text-gray-900 dark:text-white text-overflow hover:underline hover:text-blue-500 cursor-pointer"
-                  @click="showPostDetail(post.postID)"
-                >
+                  @click="showPostDetail(post.postID)">
                   {{ post.title }}
                 </h3>
-                <p
-                  class="text-gray-700 dark:text-gray-400 text-overflow"
-                  v-html="post.content"
-                ></p>
+                <p class="text-gray-700 dark:text-gray-400 text-overflow" v-html="post.content"></p>
               </div>
             </div>
           </div>
@@ -154,6 +113,7 @@ import commonFn from "@/utilities/commonFn";
 import FormatDateType from "@/utilities/enum/FormatDateType";
 import { Icon } from "@iconify/vue";
 
+const { proxy } = getCurrentInstance();
 const route = useRoute();
 const post = ref({});
 const comments = ref([]);
@@ -219,6 +179,10 @@ const getLatestPosts = async (numberOfPosts) => {
     latestPosts.value = res;
   }
 };
+
+const showPostsByTag = (tagID) => {
+  proxy.$router.push({ name: 'searchPage', query: { tagID: tagID } });
+}
 </script>
 
 <style lang="scss" scoped></style>

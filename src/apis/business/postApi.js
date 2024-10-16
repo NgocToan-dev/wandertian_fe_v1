@@ -33,6 +33,12 @@ class PostApi extends BusinessApi {
     }
     return await httpClient.getAsync(request);
   }
+  async getPostByTag(tagID){
+    const request = {
+      url: `${this.getApiUrl()}/getPostByTag` + `?tagID=${tagID}`,
+    }
+    return await httpClient.getAsync(request);
+  }
 }
 
 export default new PostApi();
